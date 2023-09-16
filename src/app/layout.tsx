@@ -1,23 +1,23 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { LocalFont } from "next/font/local";
+import localFont from "next/font/local";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const poppins = LocalFont({
+const poppins = localFont({
   src: [
     {
       path: "../../public/fonts/Poppins-Regular.ttf",
-      format: "400",
+      weight: "400",
     },
     {
       path: "../../public/fonts/Poppins-Medium.ttf",
-      format: "500",
+      weight: "500",
     },
     {
       path: "../../public/fonts/Poppins-Bold.ttf",
-      format: "700",
+      weight: "700",
     },
   ],
 });
@@ -34,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={poppins.className}>{children}</body>
     </html>
   );
 }
