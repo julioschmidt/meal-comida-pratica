@@ -1,3 +1,6 @@
+"use client";
+import Button from "../components/Button";
+import Input from "../components/Input";
 import Navigation from "../components/Navigation";
 import Image from "next/image";
 
@@ -23,32 +26,28 @@ export default function LoginPage() {
             <div className="text-slate-600 mb-3">
               <form>
                 <div className="flex flex-col leading-tight pb-5">
-                  <label className="text-sm pb-1.5" htmlFor="email">
-                    Email
-                  </label>
-                  <div className="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 justify-start items-start gap-3 inline-flex">
-                    <input
-                      type="email"
-                      id="email"
-                      placeholder="example@gmail.com"
-                    />
-                  </div>
+                  <Input
+                  type="email"
+                  id="email"
+                  placeholder="example@gmail.com"
+                  label="Email"
+                  labelClassName="text-sm pb-1.5"
+                  inputClassName="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 justify-start items-start gap-3 inline-flex"/>
                 </div>
                 <div className="flex flex-col pb-5">
-                  <label className="text-sm pb-1.5" htmlFor="password">
-                    Senha
-                  </label>
-                  <div className="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 justify-start items-start gap-3 inline-flex">
-                    <input type="password" id="password" />
-                  </div>
+                <Input
+                  type="password"
+                  id="password"
+                  placeholder="example@gmail.com"
+                  label="Senha"
+                  labelClassName="text-sm pb-1.5"
+                  inputClassName="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 justify-start items-start gap-3 inline-flex"/>
                 </div>
-                <div className="w-80 h-12 px-4 py-3 bg-green-500 rounded-md justify-center items-center gap-2.5 inline-flex">
-                  <button
-                    className="text-white text-base font-semibold font"
-                    type="submit"
-                  >
-                    Entrar
-                  </button>
+                <div className="w-80 h-12 justify-center items-center gap-2.5 inline-flex">
+                  <Button
+                    text="Entrar"
+                    onClick={() => {}}
+                    className="text-white text-base font-semibold bg-green-500 rounded-md px-28 py-3 "/>
                 </div>
               </form>
             </div>
