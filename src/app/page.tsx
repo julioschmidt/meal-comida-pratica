@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Button from "./components/Button";
+import Navigation from "./components/Navigation";
 
 export default function Home() {
   return (
@@ -17,9 +17,10 @@ export default function Home() {
       <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl pb-5">
         Comida Prática
       </p>
-      <Button
+      <Navigation
+        route="/login"
         text="Iniciar"
-        className="bg-gray-100 rounded-md justify-center items-center inline-flex h-10 px-4 py-3 w-[150px] text-slate-600 font-semibold leading-snug px-"
+        className="bg-gray-100 rounded-md justify-center items-center inline-flex h-10 px-4 py-3 w-[150px] md:w-[200px] text-slate-600 font-semibold leading-snug px-"
       />
     </main>
   );
