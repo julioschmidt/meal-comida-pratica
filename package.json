@@ -19,11 +19,8 @@
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
-<<<<<<< HEAD
     "duckdb": "^0.8.1",
-=======
     "date-fns": "^2.30.0",
->>>>>>> c391302c97811c88b2a98f6cdb7e82932b8cab62
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
     "fs-extra": "^11.1.1",
@@ -39,9 +36,8 @@
     "@types/node": "^20.6.2",
     "@types/parquetjs": "^0.10.3",
     "esbuild": "^0.19.3",
-    "prisma": "^5.3.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
     "@types/react-datepicker": "^4.15.0",
     "prisma": "^5.3.1"
   }
