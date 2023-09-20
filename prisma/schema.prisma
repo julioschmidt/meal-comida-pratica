@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model image {
+  id         Int      @id @default(autoincrement())
+  imagem_url String?
+  recipe     recipe[]
+}
+
+model ingredients {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+}
+
+model post_comments {
+  id           Int        @id @default(autoincrement())
+  user_id      Int
+  post_id      Int
+  comment_text String
+  created_at   DateTime   @db.Timestamp(6)
+  user_posts   user_posts @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users        users      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model recipe {
+  id                      Int                    @id @default(autoincrement())
+  name                    String                 @db.VarChar(120)
+  category                String?                @db.VarChar(50)
+  review                  Int?
+  cooking_time            String?                @db.VarChar(20)
+  portions                Int?
+  instructions            String[]
+  ingredients_description String[]
+  fk_image                Int?
+  created_by              Int?
+  users                   users?                 @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  image                   image?                 @relation(fields: [fk_image], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_favorite_recipe    user_favorite_recipe[]
+  user_saved_recipe       user_saved_recipe[]
+}
+
+model recipe_ingredients {
+  recipe_ingredients_id Int @id @default(autoincrement())
+  recipe_id             Int
+  ingredients_id        Int
+}
+
+model state {
+  id             Int     @id @default(autoincrement())
+  state_initials String  @db.VarChar(10)
+  state_name     String  @db.VarChar(100)
+  users          users[]
+}
+
+model user_favorite_recipe {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  recipe_id Int
+  saved_at  DateTime @db.Timestamp(6)
+  recipe    recipe   @relation(fields: [recipe_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users     users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_posts {
+  id            Int             @id @default(autoincrement())
+  user_id       Int
+  post_content  String?
+  created_at    DateTime?       @db.Timestamp(6)
+  image_url     String?
+  likes         Int?
+  saves         Int?
+  post_comments post_comments[]
+  users         users           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_relationship {
+  id                                          Int   @id @default(autoincrement())
+  follower_id                                 Int
+  following_id                                Int
+  users_user_relationship_follower_idTousers  users @relation("user_relationship_follower_idTousers", fields: [follower_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_user_relationship_following_idTousers users @relation("user_relationship_following_idTousers", fields: [following_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_saved_recipe {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  recipe_id Int
+  saved_at  DateTime @db.Timestamp(6)
+  recipe    recipe   @relation(fields: [recipe_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users     users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id                                                      Int                    @id @default(autoincrement())
+  name                                                    String                 @db.VarChar(200)
+  cpf                                                     String                 @db.VarChar(15)
+  phone_number                                            String                 @db.VarChar(255)
+  password                                                String
+  username                                                String                 @db.VarChar(100)
+  state_id                                                Int
+  adress                                                  String                 @db.VarChar(255)
+  post_comments                                           post_comments[]
+  recipe                                                  recipe[]
+  user_favorite_recipe                                    user_favorite_recipe[]
+  user_posts                                              user_posts[]
+  user_relationship_user_relationship_follower_idTousers  user_relationship[]    @relation("user_relationship_follower_idTousers")
+  user_relationship_user_relationship_following_idTousers user_relationship[]    @relation("user_relationship_following_idTousers")
+  user_saved_recipe                                       user_saved_recipe[]
+  state                                                   state                  @relation(fields: [state_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
