@@ -27,7 +27,11 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@types/react-datepicker": "^4.15.0",
     "prisma": "^5.3.1"
+=======
+    "@types/react-datepicker": "^4.15.0""prisma": "^5.3.1"
+>>>>>>> 8768a42eafa534aab2e3cb1f37224878c375c11d
   }
 }
