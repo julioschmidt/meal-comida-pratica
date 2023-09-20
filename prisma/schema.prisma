@@ -52,10 +52,10 @@ model recipe_ingredients {
 }
 
 model state {
-  id             Int     @id @default(autoincrement())
-  state_initials String  @db.VarChar(10)
-  state_name     String  @db.VarChar(100)
-  users          users[]
+  id             Int      @id @default(autoincrement())
+  state_initials String   @db.VarChar(10)
+  state_name     String   @db.VarChar(100)
+  cities         cities[]
 }
 
 model user_favorite_recipe {
@@ -103,8 +103,8 @@ model users {
   phone_number                                            String                 @db.VarChar(255)
   password                                                String
   username                                                String                 @db.VarChar(100)
-  state_id                                                Int
-  adress                                                  String                 @db.VarChar(255)
+  address_number                                          Int?
+  cep_id                                                  Int?
   post_comments                                           post_comments[]
   recipe                                                  recipe[]
   user_favorite_recipe                                    user_favorite_recipe[]
@@ -112,5 +112,23 @@ model users {
   user_relationship_user_relationship_follower_idTousers  user_relationship[]    @relation("user_relationship_follower_idTousers")
   user_relationship_user_relationship_following_idTousers user_relationship[]    @relation("user_relationship_following_idTousers")
   user_saved_recipe                                       user_saved_recipe[]
-  state                                                   state                  @relation(fields: [state_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ceps                                                    ceps?                  @relation(fields: [cep_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ceps {
+  id         Int     @id @default(autoincrement())
+  cep        String  @db.VarChar(10)
+  logradouro String? @db.VarChar(255)
+  bairro     String? @db.VarChar(200)
+  fk_cities  Int?
+  cities     cities? @relation(fields: [fk_cities], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users      users[]
+}
+
+model cities {
+  id        Int    @id
+  city_name String @db.VarChar(255)
+  fk_state  Int
+  ceps      ceps[]
+  state     state  @relation(fields: [fk_state], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
