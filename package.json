@@ -27,6 +27,7 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
-    "@types/react-datepicker": "^4.15.0"
+    "@types/react-datepicker": "^4.15.0",
+    "prisma": "^5.3.1"
   }
 }
