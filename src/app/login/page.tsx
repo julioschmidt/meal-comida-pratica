@@ -8,7 +8,7 @@ export default function LoginPage() {
   return (
     <div className="bg-white h-screen">
       <div className="flex flex-col md:flex-row lg:flex-row">
-        <div className="h-full bg-white pr-10">
+        <div className="flex justify-center items-center h-full bg-white pr-10 ">
           <div className="bg-white h-screen flex flex-col justify-center pl-4">
             <div className="pb-3">
               <h1 className="text-slate-600 text-3xl md:text-3xl lg:text-3xl xl:text-3xl font-bold pb-2">
@@ -25,14 +25,14 @@ export default function LoginPage() {
             </div>
             <div className="text-slate-600 mb-3">
               <form>
-                <div className="flex flex-col leading-tight pb-5">
+                <div className="flex flex-col leading-tight pb-5 justify-center">
                   <Input
                   type="email"
                   id="email"
                   placeholder="example@gmail.com"
                   label="Email"
                   labelClassName="text-sm pb-1.5"
-                  inputClassName="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 justify-start items-start gap-3 inline-flex"/>
+                  inputClassName="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 items-start gap-3 inline-flex"/>
                 </div>
                 <div className="flex flex-col pb-5">
                 <Input
@@ -52,7 +52,7 @@ export default function LoginPage() {
               </form>
             </div>
             <Navigation
-              className="text-slate-700 font-semibold underline leading-snug"
+              className="text-slate-700 font-semibold underline leading-snug text-center"
               route={"#"}
               text={"Esqueci a senha"}
             />
