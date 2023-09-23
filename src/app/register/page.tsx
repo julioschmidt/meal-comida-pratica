@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../components/Button";
 import DateInput from "../components/DateInput";
 import Input from "../components/Input";
@@ -15,6 +15,29 @@ export default function RegisterPage() {
   const [cep, setCep] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  useEffect(() => {
+    const fetchAddressData = async () => {
+      if (cep.length === 8) {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/api/cep?cep=${cep}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            setAddress(data.logradouro || "");
+            setCity(data.cities.city_name);
+            setDistrict(data.cities.state.state_initials);
+          } else {
+            console.error("Failed to fetch address data");
+          }
+        } catch (error) {
+          console.error("Error fetching address data:", error);
+        }
+      }
+    };
+    fetchAddressData();
+  }, [cep]);
 
   return (
     <div className="bg-white h-screen">
@@ -61,7 +84,7 @@ export default function RegisterPage() {
                     <Input
                       type="text"
                       id="cep"
-                      value={address}
+                      value={cep}
                       onChange={(e) => setCep(e.target.value)}
                       placeholder="95900-000"
                       label="Cep"
