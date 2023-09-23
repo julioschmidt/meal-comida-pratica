@@ -11,9 +11,7 @@
   "prisma": {
     "seed": "ts-node-esm prisma/seed.ts"
   },
-  
   "dependencies": {
-    "@next/font": "^13.4.19",
     "@prisma/client": "^5.3.1",
     "@types/node": "20.6.1",
     "@types/react": "18.2.21",
