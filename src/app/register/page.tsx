@@ -95,32 +95,35 @@ export default function RegisterPage() {
                     <Input
                       type="text"
                       id="address"
+                      readOnly={true}
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       placeholder="Rua, número, bairro"
                       label="Endereço"
-                      inputClassName="w-80 h-10 p-3 bg-white rounded-md border border-slate-600"
+                      inputClassName="w-80 h-10 p-3 bg-slate-200 rounded-md border border-slate-600"
                     />
                   </div>
                   <div className="flex space-x-4 pb-5">
                     <Input
                       type="text"
                       id="city"
+                      readOnly={true}
                       placeholder="Porto Alegre"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
                       label="Cidade"
-                      inputClassName="w-60 h-10 p-3 bg-white rounded-md border border-slate-600"
+                      inputClassName="w-60 h-10 p-3 bg-slate-200 rounded-md border border-slate-600"
                     />
 
                     <Input
                       type="text"
+                      readOnly={true}
                       id="district"
                       placeholder="RS"
                       value={district}
                       onChange={(e) => setDistrict(e.target.value)}
                       label="Estado"
-                      inputClassName="w-16 h-10 p-3 bg-white rounded-md border border-slate-600"
+                      inputClassName="w-16 h-10 p-3 bg-slate-200 rounded-md border border-slate-600"
                     />
                   </div>
                   <div className="pb-5">

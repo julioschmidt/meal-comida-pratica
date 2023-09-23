@@ -4,12 +4,14 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   labelClassName?: string;
   inputClassName?: string;
+  readOnly?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
   label,
   labelClassName,
   inputClassName,
+  readOnly,
   ...rest
 }) => {
   return (
@@ -19,7 +21,11 @@ const Input: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-      <input {...rest} className={inputClassName + " leading-tight"} />
+      <input
+        {...rest}
+        readOnly={readOnly}
+        className={inputClassName + " leading-tight"}
+      />
     </div>
   );
 };
