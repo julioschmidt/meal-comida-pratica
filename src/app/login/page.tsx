@@ -18,7 +18,7 @@ export default function LoginPage() {
                 Entre ou
                 <Navigation
                   className="text-green-500 text-base font-semibold underline"
-                  route={"#"}
+                  route={"/register"}
                   text={" crie sua conta"}
                 />
               </p>
@@ -27,27 +27,30 @@ export default function LoginPage() {
               <form>
                 <div className="flex flex-col leading-tight pb-5 justify-center">
                   <Input
-                  type="email"
-                  id="email"
-                  placeholder="example@gmail.com"
-                  label="Email"
-                  labelClassName="text-sm pb-1.5"
-                  inputClassName="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 items-start gap-3 inline-flex"/>
+                    type="email"
+                    id="email"
+                    placeholder="example@gmail.com"
+                    label="Email"
+                    labelClassName="text-sm pb-1.5"
+                    inputClassName="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 items-start gap-3 inline-flex"
+                  />
                 </div>
                 <div className="flex flex-col pb-5">
-                <Input
-                  type="password"
-                  id="password"
-                  placeholder="example@gmail.com"
-                  label="Senha"
-                  labelClassName="text-sm pb-1.5"
-                  inputClassName="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 justify-start items-start gap-3 inline-flex"/>
+                  <Input
+                    type="password"
+                    id="password"
+                    placeholder="example@gmail.com"
+                    label="Senha"
+                    labelClassName="text-sm pb-1.5"
+                    inputClassName="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 justify-start items-start gap-3 inline-flex"
+                  />
                 </div>
                 <div className="w-80 h-12 justify-center items-center gap-2.5 inline-flex">
                   <Button
                     text="Entrar"
                     onClick={() => {}}
-                    className="text-white text-base font-semibold bg-green-500 rounded-md px-28 py-3 "/>
+                    className="text-white text-base font-semibold bg-green-500 rounded-md px-28 py-3 "
+                  />
                 </div>
               </form>
             </div>
