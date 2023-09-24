@@ -19,6 +19,16 @@ export default function Home() {
           O que vamos comer hoje?
         </h1>
       </div>
+      <div className="flex justify-center items-center">
+        <Image
+          src={
+            "https://img.cybercook.com.br/imagens/receitas/585/batatas-recheadas-com-frios-120x120.jpg"
+          }
+          alt={"imagem de comida"}
+          width={328}
+          height={212}
+        />
+      </div>
     </div>
   );
 }
