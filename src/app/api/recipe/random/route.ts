@@ -15,6 +15,10 @@ async function generateRandomRecipeId(): Promise<number> {
 }
 
 export async function GET(request: Request) {
+    const { searchParams } = new URL(request.url)
+    const altura = searchParams.get('altura')
+    const largura = searchParams.get('largura')
+
     const prisma = new PrismaClient()
     const randomId = await generateRandomRecipeId()
 
@@ -32,5 +36,12 @@ export async function GET(request: Request) {
             },
         }
     })
+
+    if (altura && largura && recipeData && recipeData.image) {
+        recipeData.image.imagem_url = recipeData.image.imagem_url?.replace('120x120', `${altura}x${largura}`) ?? null;
+        return NextResponse.json(recipeData)
+    }
+
     return NextResponse.json(recipeData)
+
 }
