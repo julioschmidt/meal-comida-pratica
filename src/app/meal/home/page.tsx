@@ -22,11 +22,11 @@ export default function Home() {
       <div className="flex justify-center items-center">
         <Image
           src={
-            "https://img.cybercook.com.br/imagens/receitas/585/batatas-recheadas-com-frios-120x120.jpg"
+            "https://img.cybercook.com.br/imagens/receitas/585/batatas-recheadas-com-frios-330x215.jpg"
           }
           alt={"imagem de comida"}
-          width={328}
-          height={212}
+          width={330}
+          height={215}
         />
       </div>
     </div>
