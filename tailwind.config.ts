@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         "poppins": "var(--font-poppins)",
-      }
+      },
     },
   },
   plugins: [],
