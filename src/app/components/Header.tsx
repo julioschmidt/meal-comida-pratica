@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function Header() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="h-14 bg-green-500">
+    <header className="bg-green-500 py-2">
       <div className="h-full flex items-center justify-between xl:mx-7 flex-wrap w-full">
         <a href="#" className="uppercase ml-6 text-2xl font-bold	">
           meal
@@ -18,7 +18,7 @@ export default function Header() {
         <nav
           className={`${
             open ? "block" : "hidden"
-          } lg:flex lg:items-center lg:w-auto w-full`}
+          } lg:flex lg:items-center lg:w-auto w-full ml-6`}
         >
           <ul className="lg:flex lg:justify-between mr-6">
             <li>
