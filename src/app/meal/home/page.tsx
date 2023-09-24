@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 import Image from "next/image";
 
 export default function Home() {
-  const [randomRecipe, setRandomRecipe] = useState(null);
+  const [randomRecipe, setRandomRecipe] = useState<any>(null);
 
   useEffect(() => {
     const storedRandomRecipe = localStorage.getItem("randomRecipe");
