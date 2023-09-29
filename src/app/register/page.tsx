@@ -15,10 +15,20 @@ export default function RegisterPage() {
   const [cep, setCep] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [addressEditable, setAddrressEditable] = useState<boolean>(false);
+
+  function formatCEP(input: HTMLInputElement) {
+    input.value = input.value.replace(/\D/g, "");
+
+    if (input.value.length > 5) {
+      input.value = input.value.slice(0, 5) + "-" + input.value.slice(5, 8);
+    }
+  }
 
   useEffect(() => {
     const fetchAddressData = async () => {
-      if (cep.length === 8) {
+      if (cep.length === 9) {
+        setAddrressEditable(false);
         try {
           const response = await fetch(
             `http://localhost:3000/api/cep?cep=${cep}`
@@ -36,8 +46,15 @@ export default function RegisterPage() {
         }
       }
     };
+
     fetchAddressData();
   }, [cep]);
+
+  useEffect(() => {
+    if (address == "" && city) {
+      setAddrressEditable(true);
+    }
+  }, [city]);
 
   return (
     <div className="bg-white h-screen">
@@ -52,7 +69,7 @@ export default function RegisterPage() {
                 Crie sua conta ou
                 <Navigation
                   className="text-green-500 text-base font-semibold underline"
-                  route={"#"}
+                  route={"/login"}
                   text={" entre"}
                 />
               </p>
@@ -71,15 +88,15 @@ export default function RegisterPage() {
                       inputClassName="w-80 h-10 p-3 bg-white rounded-md border border-slate-600"
                     />
                   </div>
-                  <div className="pb-5">
+                  {/* <div className="pb-5">
                     <DateInput
                       selectedDate={selectedDate}
                       onDateChange={setSelectedDate}
                       label="Data de nascimento"
                       placeholderText="DD / MM / AAAA"
-                      inputClassName="w-80 h-10 p-3 bg-white rounded-md border border-slate-600"
+                      inputClassName="flex-center w-80 h-10 py-1 px-2 bg-white rounded-md border border-slate-600"
                     />
-                  </div>
+                  </div> */}
                   <div className="pb-5">
                     <Input
                       type="text"
@@ -88,6 +105,8 @@ export default function RegisterPage() {
                       onChange={(e) => setCep(e.target.value)}
                       placeholder="95900-000"
                       label="Cep"
+                      max-length="9"
+                      onInput={(e) => formatCEP(e.target as HTMLInputElement)}
                       inputClassName="w-80 h-10 p-3 bg-white rounded-md border border-slate-600"
                     />
                   </div>
@@ -95,12 +114,15 @@ export default function RegisterPage() {
                     <Input
                       type="text"
                       id="address"
-                      readOnly={true}
+                      readOnly={!addressEditable}
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       placeholder="Rua, número, bairro"
                       label="Endereço"
-                      inputClassName="w-80 h-10 p-3 bg-slate-200 rounded-md border border-slate-600"
+                      inputClassName={`${
+                        addressEditable ? "bg-white" : "bg-slate-200"
+                      }
+                        w-80 h-10 p-3 rounded-md border border-slate-600`}
                     />
                   </div>
                   <div className="flex space-x-4 pb-5">
@@ -130,18 +152,18 @@ export default function RegisterPage() {
                     <Input
                       type="password"
                       id="password"
-                      placeholder="*******"
+                      placeholder="********"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       label="Senha"
                       inputClassName="w-80 h-10 p-3 bg-white rounded-md border border-slate-600"
                     />
                   </div>
-                  <div className="pb-5">
+                  <div className="pb-3">
                     <Input
                       type="password"
                       id="confirm_password"
-                      placeholder="*******"
+                      placeholder="********"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       label="Confirmar senha"

@@ -39,7 +39,7 @@ export default function LoginPage() {
                   <Input
                     type="password"
                     id="password"
-                    placeholder="example@gmail.com"
+                    placeholder="********"
                     label="Senha"
                     labelClassName="text-sm pb-1.5"
                     inputClassName="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 justify-start items-start gap-3 inline-flex"
@@ -56,7 +56,7 @@ export default function LoginPage() {
             </div>
             <Navigation
               className="text-slate-700 font-semibold underline leading-snug text-center"
-              route={"#"}
+              route={"/register"}
               text={"Esqueci a senha"}
             />
           </div>

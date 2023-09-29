@@ -28,7 +28,7 @@ export default function Home() {
     }
   }, []);
   return (
-    <div className="h-screen bg-white">
+    <div className="h-screen bg-white overflow-hidden">
       <div className="mb-6">
         <Header />
       </div>

@@ -25,7 +25,11 @@ const DateInput: React.FC<DateInputProps> = ({
       {label && (
         <label className={labelClassName + " text-sm pb-1.5"}>{label}</label>
       )}
-      <div className={inputClassName + " flex justify-between leading-tight"}>
+      <div
+        className={
+          inputClassName + " flex justify-between leading-tight items-center"
+        }
+      >
         <DatePicker
           selected={selectedDate}
           onChange={(date) => onDateChange(date)}
