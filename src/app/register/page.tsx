@@ -5,6 +5,7 @@ import DateInput from "../components/DateInput";
 import Input from "../components/Input";
 import Navigation from "../components/Navigation";
 import Image from "next/image";
+import { set } from "date-fns";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState<string>("");
@@ -35,26 +36,27 @@ export default function RegisterPage() {
           );
           if (response.ok) {
             const data = await response.json();
-            setAddress(data.logradouro || "");
-            setCity(data.cities.city_name);
-            setDistrict(data.cities.state.state_initials);
-          } else {
-            console.error("Failed to fetch address data");
+            if (!data.logradouro) {
+              setAddress("");
+              setAddrressEditable(true);
+            } else {
+              setAddress(data.logradouro);
+              setCity(data.cities.city_name);
+              setDistrict(data.cities.state.state_initials);
+            }
           }
         } catch (error) {
           console.error("Error fetching address data:", error);
         }
+      } else {
+        setAddress("");
+        setCity("");
+        setDistrict("");
       }
     };
 
     fetchAddressData();
   }, [cep]);
-
-  useEffect(() => {
-    if (address == "" && city) {
-      setAddrressEditable(true);
-    }
-  }, [city]);
 
   return (
     <div className="bg-white h-screen">
