@@ -99,16 +99,16 @@ model user_saved_recipe {
 model users {
   id                                                      Int                    @id @default(autoincrement())
   name                                                    String                 @db.VarChar(200)
-  cpf                                                     String                 @db.VarChar(15)
-  phone_number                                            String                 @db.VarChar(255)
   password                                                String
   username                                                String                 @db.VarChar(100)
   address_number                                          Int?
   cep_id                                                  Int?
+  email                                                   String                 @db.VarChar(200)
   post_comments                                           post_comments[]
   recipe                                                  recipe[]
   user_favorite_recipe                                    user_favorite_recipe[]
   user_posts                                              user_posts[]
+  user_preferences                                        user_preferences[]
   user_relationship_user_relationship_follower_idTousers  user_relationship[]    @relation("user_relationship_follower_idTousers")
   user_relationship_user_relationship_following_idTousers user_relationship[]    @relation("user_relationship_following_idTousers")
   user_saved_recipe                                       user_saved_recipe[]
@@ -118,9 +118,9 @@ model users {
 model ceps {
   id         Int     @id @default(autoincrement())
   cep        String  @db.VarChar(10)
-  logradouro String? @db.VarChar(255)
   bairro     String? @db.VarChar(200)
   fk_cities  Int?
+  logradouro String? @db.VarChar(255)
   cities     cities? @relation(fields: [fk_cities], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users      users[]
 }
@@ -131,4 +131,13 @@ model cities {
   fk_state  Int
   ceps      ceps[]
   state     state  @relation(fields: [fk_state], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_preferences {
+  id                  Int      @id @default(autoincrement())
+  user_id             Int?
+  quick_recipes       Boolean?
+  lactose_intolerance Boolean?
+  gluten_intolerance  Boolean?
+  users               users?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
