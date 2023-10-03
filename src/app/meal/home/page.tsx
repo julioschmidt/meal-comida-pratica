@@ -36,21 +36,23 @@ export default function Home() {
         <Image
           src="/images/frigideira.svg"
           alt="meal"
-          width={500}
-          height={500}
-          className="w-[230px] h-[230px] rotate-[-15deg]"
+          width={300}
+          height={300}
+          className="w-[190px] h-[190px]"
         />
-        <h1 className="text-black font-bold text-3xl mr-2">
+        <h1 className="text-black font-bold text-xl mr-2">
           O que vamos comer hoje?
         </h1>
       </div>
-      <div className="flex justify-center items-center">
+      <h2 className="text-black font-bold text-lg ml-6 mb-2">Sugestão:</h2>
+      <div className="flex justify-center items-center w-full px-6">
         {randomRecipe ? (
           <Image
             src={randomRecipe.image?.imagem_url || ""}
             alt={randomRecipe.name || "imagem de comida"}
-            width={330}
-            height={215}
+            width={200}
+            height={200}
+            className="w-full h-full rounded"
           />
         ) : (
           <p>Carregando receita...</p>
