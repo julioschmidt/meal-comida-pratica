@@ -47,13 +47,20 @@ export default function Home() {
       <h2 className="text-black font-bold text-lg ml-6 mb-2">Sugestão:</h2>
       <div className="flex justify-center items-center w-full px-6">
         {randomRecipe ? (
-          <Image
-            src={randomRecipe.image?.imagem_url || ""}
-            alt={randomRecipe.name || "imagem de comida"}
-            width={200}
-            height={200}
-            className="w-full h-full rounded"
-          />
+          <div className="w-full h-full">
+            <Image
+              src={randomRecipe.image?.imagem_url || ""}
+              alt={randomRecipe.name || "imagem de comida"}
+              width={200}
+              height={200}
+              className="w-full h-full rounded"
+            />
+            <div className="bg-neutral-600 opacity-60">
+              <p className="text-white font-bold text-xs -mt-4 ml-2">
+                {randomRecipe.name}
+              </p>
+            </div>
+          </div>
         ) : (
           <p>Carregando receita...</p>
         )}
