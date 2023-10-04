@@ -98,10 +98,9 @@ model user_saved_recipe {
 
 model users {
   id                                                      Int                    @id @default(autoincrement())
-  name                                                    String                 @db.VarChar(200)
+  name                                                    String?                @db.VarChar(200)
   password                                                String
-  username                                                String                 @db.VarChar(100)
-  address_number                                          Int?
+  username                                                String?                @db.VarChar(200)
   cep_id                                                  Int?
   email                                                   String                 @db.VarChar(200)
   post_comments                                           post_comments[]

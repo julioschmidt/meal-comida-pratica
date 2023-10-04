@@ -1,15 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import Button from "../components/Button";
-import DateInput from "../components/DateInput";
 import Input from "../components/Input";
 import Navigation from "../components/Navigation";
 import Image from "next/image";
-import { set } from "date-fns";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [address, setAddress] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [district, setDistrict] = useState<string>("");
@@ -17,6 +14,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [addressEditable, setAddrressEditable] = useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState<string>("");
 
   function formatCEP(input: HTMLInputElement) {
     input.value = input.value.replace(/\D/g, "");
@@ -26,6 +24,32 @@ export default function RegisterPage() {
     }
   }
 
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setPasswordError("As senhas não coincidem");
+    } else {
+      const user = {
+        email,
+        cep,
+        password,
+      };
+      const response = await fetch("http://localhost:3000/api/user/register", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (response.ok) {
+        console.log("ok"); //verificar algo para renderizar para usuario
+      } else {
+        console.log("not ok"); //verificar algo para renderizar para usuario
+      }
+    }
+  };
   useEffect(() => {
     const fetchAddressData = async () => {
       if (cep.length === 9) {
@@ -78,7 +102,7 @@ export default function RegisterPage() {
             </div>
             <div className="text-slate-600 mb-3">
               <div className="flex flex-col">
-                <form>
+                <form onSubmit={handleFormSubmit}>
                   <div className="pb-5">
                     <Input
                       type="email"
@@ -172,19 +196,22 @@ export default function RegisterPage() {
                       inputClassName="w-80 h-10 p-3 bg-white rounded-md border border-slate-600"
                     />
                   </div>
+                  {passwordError && (
+                    <p className="text-red-500">{passwordError}</p>
+                  )}
+                  <div className="w-80 h-10 flex-col justify-center items-center gap-2.5 inline-flex mt-10">
+                    <Button
+                      type="submit"
+                      text="Cadastrar"
+                      className="text-white text-base font-semibold bg-green-500 rounded-md px-28 py-3 "
+                    />
+                    <Navigation
+                      className="text-slate-700 font-semibold underline leading-snug"
+                      route={"#"}
+                      text={"Esqueci a senha"}
+                    />
+                  </div>
                 </form>
-                <div className="w-80 h-10 flex-col justify-center items-center gap-2.5 inline-flex mt-10">
-                  <Button
-                    text="Cadastrar"
-                    onClick={() => {}}
-                    className="text-white text-base font-semibold bg-green-500 rounded-md px-28 py-3 "
-                  />
-                  <Navigation
-                    className="text-slate-700 font-semibold underline leading-snug"
-                    route={"#"}
-                    text={"Esqueci a senha"}
-                  />
-                </div>
               </div>
             </div>
           </div>
