@@ -1,6 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
+import SessionProvider from "./providers/sessionProvider";
+import { getServerSession } from 'next-auth'
+
 
 const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({
@@ -13,14 +16,19 @@ export const metadata: Metadata = {
   description: "Comida prática e saudável para o seu dia a dia",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession()
   return (
     <html lang="en">
-      <body className={poppins.className}>{children}</body>
+      <body className={poppins.className}>
+        <SessionProvider session={session}>
+          {children}
+        </SessionProvider>
+      </body>
     </html>
   );
 }

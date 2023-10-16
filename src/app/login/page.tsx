@@ -1,10 +1,24 @@
 "use client";
+import { FormEventHandler, useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import Navigation from "../components/Navigation";
+import { signIn } from 'next-auth/react';
 import Image from "next/image";
 
 export default function LoginPage() {
+  const [userInfo, setUserInfo] = useState({email: '', password: ''});
+  
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => { 
+    e.preventDefault();
+    
+    const res = await signIn('credentials', {
+      email: userInfo.email,
+      password: userInfo.password,
+      callbackUrl: 'http://localhost:3000/meal/home'
+    });
+  }
+
   return (
     <div className="bg-white h-screen">
       <div className="flex flex-col md:flex-row lg:flex-row">
@@ -24,9 +38,13 @@ export default function LoginPage() {
               </p>
             </div>
             <div className="text-slate-600 mb-3">
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="flex flex-col leading-tight pb-5 justify-center">
                   <Input
+                   value={userInfo.email}
+                   onChange={({target}) => {
+                     setUserInfo({...userInfo, email: target.value})
+                   }}
                     type="email"
                     id="email"
                     placeholder="example@gmail.com"
@@ -37,18 +55,22 @@ export default function LoginPage() {
                 </div>
                 <div className="flex flex-col pb-5">
                   <Input
+                    value={userInfo.password}
+                    onChange={({target}) => {
+                      setUserInfo({...userInfo, password: target.value})
+                    }}
                     type="password"
                     id="password"
                     placeholder="********"
                     label="Senha"
                     labelClassName="text-sm pb-1.5"
                     inputClassName="leading-tight w-80 self-stretch h-12 p-3 bg-white rounded-md border border-slate-600 justify-start items-start gap-3 inline-flex"
-                  />
+                 />
                 </div>
                 <div className="w-80 h-12 justify-center items-center gap-2.5 inline-flex">
                   <Button
                     text="Entrar"
-                    onClick={() => {}}
+                    type="submit"
                     className="text-white text-base font-semibold bg-green-500 rounded-md px-28 py-3 "
                   />
                 </div>
