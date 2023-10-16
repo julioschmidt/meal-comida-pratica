@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Home() {
   const [randomRecipe, setRandomRecipe] = useState<any>(null);
@@ -27,6 +29,12 @@ export default function Home() {
       fetchRandomRecipe();
     }
   }, []);
+
+  const {data: session} = useSession()
+  if(!session) {
+    redirect('/login')
+  }
+
   return (
     <div className="h-screen bg-white overflow-hidden">
       <div className="mb-6">
