@@ -5,33 +5,35 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
+
 export default function Home() {
   const [randomRecipe, setRandomRecipe] = useState<any>(null);
+
+  async function fetchRandomRecipe() {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/recipe/random?altura=840&largura=480"
+      );
+      const data = await response.json();
+      setRandomRecipe(data);
+  
+      localStorage.setItem("randomRecipe", JSON.stringify(data));
+    } catch (error) {
+      console.error("Erro ao buscar receita", error);
+    }
+  }
 
   useEffect(() => {
     const storedRandomRecipe = localStorage.getItem("randomRecipe");
     if (storedRandomRecipe) {
       setRandomRecipe(JSON.parse(storedRandomRecipe));
     } else {
-      async function fetchRandomRecipe() {
-        try {
-          const response = await fetch(
-            "http://localhost:3000/api/recipe/random?altura=315&largura=215"
-          );
-          const data = await response.json();
-          setRandomRecipe(data);
-
-          localStorage.setItem("randomRecipe", JSON.stringify(data));
-        } catch (error) {
-          console.error("Erro ao buscar receita", error);
-        }
-      }
       fetchRandomRecipe();
     }
   }, []);
 
-  const {data: session} = useSession()
-  if(!session) {
+  const { data: session } = useSession()
+  if (!session) {
     redirect('/login')
   }
 
@@ -67,6 +69,27 @@ export default function Home() {
               <p className="text-white font-bold text-xs -mt-4 ml-2">
                 {randomRecipe.name}
               </p>
+            </div>
+            <div className="flex justify-between pt-3">
+              <Image 
+                src={"/icons/close-icon.svg"}
+                alt={"Botão de não gostei"}
+                width={56}
+                height={56}
+                onClick={fetchRandomRecipe}
+                />
+                 <Image 
+                src={"/icons/heart-icon.svg"}
+                alt={"Botão de não gostei"}
+                width={56}
+                height={56}
+                />
+                 <Image 
+                src={"/icons/check-icon.svg"}
+                alt={"Botão de não gostei"}
+                width={56}
+                height={56}
+                />
             </div>
           </div>
         ) : (
