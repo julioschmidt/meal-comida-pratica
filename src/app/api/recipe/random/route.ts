@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
+import { getServerSession } from "next-auth/next"
+import { redirect } from 'next/navigation'
 
 async function generateRandomRecipeId(): Promise<number> {
     const prisma = new PrismaClient()
@@ -15,6 +17,13 @@ async function generateRandomRecipeId(): Promise<number> {
 }
 
 export async function GET(request: Request) {
+
+    const session = await getServerSession()
+    
+    if(!session) { 
+        return redirect('http://localhost:3000/login')
+    }
+
     const { searchParams } = new URL(request.url)
     const altura = searchParams.get('altura')
     const largura = searchParams.get('largura')
@@ -29,6 +38,8 @@ export async function GET(request: Request) {
         select: {
             id: true,
             name: true,
+            ingredients_description: true,
+            instructions: true,
             image: {
                 select: {
                     imagem_url: true

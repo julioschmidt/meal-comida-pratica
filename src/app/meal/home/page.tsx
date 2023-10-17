@@ -33,6 +33,7 @@ export default function Home() {
   }, []);
 
   const { data: session } = useSession()
+
   if (!session) {
     redirect('/login')
   }
@@ -80,15 +81,16 @@ export default function Home() {
                 />
                  <Image 
                 src={"/icons/heart-icon.svg"}
-                alt={"Botão de não gostei"}
+                alt={"Botão de amei"}
                 width={56}
                 height={56}
                 />
                  <Image 
                 src={"/icons/check-icon.svg"}
-                alt={"Botão de não gostei"}
+                alt={"Botão de gostei"}
                 width={56}
                 height={56}
+                onClick={() => { window.location.href = 'http://localhost:3000/meal/receita' }}
                 />
             </div>
           </div>
@@ -99,3 +101,4 @@ export default function Home() {
     </div>
   );
 }
+

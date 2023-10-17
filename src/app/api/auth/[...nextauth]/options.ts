@@ -31,7 +31,7 @@ export const options: NextAuthOptions = {
                 if(!user) throw new Error("User not found")
                 const isPasswordValid = await isSamePassword(password, user.password)
                 if(!isPasswordValid) throw new Error("Password is not valid")
-                return user;     
+                return user;
             },
         })
     ],
