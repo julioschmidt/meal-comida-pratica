@@ -31,14 +31,15 @@ async function insertSavedRecipe({userId, recipeId, savedAt}: SavedRecipeCreateA
 export async function POST(request: Request) {
     const requestBody = await request.json()
   
-    const session = await getServerSession()
+    // const session = await getServerSession()
     
-    if(!session) { 
-        return "Not allowed"
-    }
+    // if(!session) { 
+    //     return "Not allowed"
+    // }
 
-    const userId = await findUserByEmail(requestBody.email)
-    const inserted = insertSavedRecipe({
+    const userId = await findUserByEmail(requestBody.userEmail)
+    console.log(requestBody.recipeId)
+    const inserted = await insertSavedRecipe({
         userId: userId,  
         recipeId: requestBody.recipeId,
         savedAt: new Date().toISOString()
