@@ -28,5 +28,13 @@ export async function GET(request: Request) {
     },
   });
 
-  return NextResponse.json(cepData);
+  let success = true;
+  if (!cepData) {
+    success = false;
+  }
+
+  return NextResponse.json({
+    success,
+    cepData,
+  });
 }

@@ -51,8 +51,8 @@ export default function Home() {
             <Image
               src={randomRecipe.image?.imagem_url || ""}
               alt={randomRecipe.name || "imagem de comida"}
-              width={200}
-              height={200}
+              width={500}
+              height={500}
               className="w-full h-full rounded"
             />
             <div className="bg-neutral-600 opacity-60">

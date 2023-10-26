@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import Navigation from "../components/Navigation";
 import Image from "next/image";
+import { set } from "date-fns";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState<string>("");
@@ -14,6 +15,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [addressEditable, setAddrressEditable] = useState<boolean>(false);
+  const [cepError, setCepError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
 
   function formatCEP(input: HTMLInputElement) {
@@ -27,16 +29,14 @@ export default function RegisterPage() {
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setPasswordError("As senhas não coincidem");
-    } else {
+    if (passwordError == "") {
       const user = {
         email,
         cep,
         password,
       };
       const response = await fetch("http://localhost:3000/api/user/register", {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -44,6 +44,7 @@ export default function RegisterPage() {
       });
 
       if (response.ok) {
+        window.open("/login", "_self");
         console.log("ok"); //verificar algo para renderizar para usuario
       } else {
         console.log("not ok"); //verificar algo para renderizar para usuario
@@ -58,16 +59,20 @@ export default function RegisterPage() {
           const response = await fetch(
             `http://localhost:3000/api/cep?cep=${cep}`
           );
-          if (response.ok) {
-            const data = await response.json();
-            if (!data.logradouro) {
+          const data = await response.json();
+          if (data.success === true) {
+            setCepError("");
+            const cepData = data.cepData;
+            if (!cepData.logradouro) {
               setAddress("");
               setAddrressEditable(true);
             } else {
-              setAddress(data.logradouro);
-              setCity(data.cities.city_name);
-              setDistrict(data.cities.state.state_initials);
+              setAddress(cepData.logradouro);
+              setCity(cepData.cities.city_name);
+              setDistrict(cepData.cities.state.state_initials);
             }
+          } else {
+            setCepError("CEP não encontrado");
           }
         } catch (error) {
           console.error("Error fetching address data:", error);
@@ -81,6 +86,14 @@ export default function RegisterPage() {
 
     fetchAddressData();
   }, [cep]);
+
+  useEffect(() => {
+    if (password === confirmPassword) {
+      setPasswordError("");
+    } else {
+      setPasswordError("As senhas não coincidem");
+    }
+  }, [password, confirmPassword]);
 
   return (
     <div className="bg-white h-screen">
@@ -136,6 +149,7 @@ export default function RegisterPage() {
                       inputClassName="w-80 h-10 p-3 bg-white rounded-md border border-slate-600"
                     />
                   </div>
+                  {cepError && <p className="text-red-500">{cepError}</p>}
                   <div className="pb-5">
                     <Input
                       type="text"
