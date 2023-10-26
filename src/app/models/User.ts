@@ -20,7 +20,16 @@ async function getCepIdByValue(cep: string): Promise<number> {
   }
   return cepValue.id;
 }
+export async function findUserByEmail(email: string): Promise<any> {
+    const prisma = new PrismaClient()
+    const user = await prisma.users.findFirst({
+        where: {
+            email: email
+        }
+    })
 
+    return user?.id
+}
 export async function createUser({
   email,
   cep,
