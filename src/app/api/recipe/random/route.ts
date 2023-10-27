@@ -38,6 +38,9 @@ export async function GET(request: Request) {
         select: {
             id: true,
             name: true,
+            cooking_time: true,
+            portions: true,
+            category: true,
             ingredients_description: true,
             instructions: true,
             image: {
