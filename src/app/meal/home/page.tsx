@@ -66,7 +66,7 @@ export default function Home() {
               height={500}
               className="w-full h-full rounded transition-transform transform hover:scale-[1.02] all ease-in-out duration-500"
             />
-            <div className="flex justify-between pt-3">
+            <div className="flex justify-around pt-3">
               <Image
                 src={"/icons/close-icon.svg"}
                 alt={"Botão de não gostei"}
