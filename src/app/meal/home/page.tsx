@@ -16,7 +16,7 @@ export default function Home() {
       );
       const data = await response.json();
       setRandomRecipe(data);
-  
+
       localStorage.setItem("randomRecipe", JSON.stringify(data));
     } catch (error) {
       console.error("Erro ao buscar receita", error);
@@ -59,39 +59,44 @@ export default function Home() {
       <div className="flex justify-center items-center w-full px-6">
         {randomRecipe ? (
           <div className="w-full h-full">
-            <Image
-              src={randomRecipe.image?.imagem_url || ""}
-              alt={randomRecipe.name || "imagem de comida"}
-              width={500}
-              height={500}
-              className="w-full h-full rounded"
-            />
-            <div className="bg-neutral-600 opacity-60">
-              <p className="text-white font-bold text-xs -mt-4 ml-2">
-                {randomRecipe.name}
-              </p>
+            <div className="relative">
+              <Image
+                src={randomRecipe.image?.imagem_url || ""}
+                alt={randomRecipe.name || "imagem de comida"}
+                width={500}
+                height={500}
+                className="w-full h-full rounded"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-black opacity-60">
+                <p className="text-white font-bold text-xm ml-2">
+                  {randomRecipe.name}
+                </p>
+              </div>
             </div>
             <div className="flex justify-between pt-3">
-              <Image 
+              <Image
                 src={"/icons/close-icon.svg"}
                 alt={"Botão de não gostei"}
                 width={56}
                 height={56}
                 onClick={fetchRandomRecipe}
-                />
-                 <Image 
+                className="transition-transform transform hover:scale-110"
+              />
+              <Image
                 src={"/icons/heart-icon.svg"}
                 alt={"Botão de amei"}
                 width={56}
                 height={56}
-                />
-                 <Image 
+                className="transition-transform transform hover:scale-110"
+              />
+              <Image
                 src={"/icons/check-icon.svg"}
                 alt={"Botão de gostei"}
                 width={56}
                 height={56}
+                className="transition-transform transform hover:scale-110"
                 onClick={() => { window.location.href = 'http://localhost:3000/meal/receita' }}
-                />
+              />
             </div>
           </div>
         ) : (

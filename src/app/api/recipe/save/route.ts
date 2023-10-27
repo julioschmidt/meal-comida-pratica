@@ -1,5 +1,4 @@
 import { findUserByEmail } from '../../../models/User'
-import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 
@@ -23,7 +22,7 @@ async function insertSavedRecipe({userId, recipeId, savedAt}: SavedRecipeCreateA
         })
         return true
     } catch(e) { 
-        console.error("Error creating saved recipe ", e)
+        console.error("Error saving recipe", e)
         return false
     }
 }
