@@ -12,7 +12,7 @@ export default function HeaderNavigation({ open }: HeaderNavigationProps) {
         open ? "absolute flex justify-end" : "hidden"
       } lg:flex lg:items-center lg:w-auto w-full`}
     >
-      <ul className="lg:flex lg:justify-between bg-green-500 opacity-80 -mt-1 pl-3 rounded-bl-md">
+      <ul className="lg:flex lg:justify-between bg-green-500 -mt-1 pl-3 rounded-bl-md">
         <li>
           <a
             href="#"

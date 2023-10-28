@@ -68,8 +68,8 @@ export default function Receita() {
             <div className="mb-6">
                 <Header />
             </div>
-            <div className="ml-6 mb-6">
-                <h1 className="text-black font-bold text-xl"> {recipe?.name} </h1>
+            <div className="mx-6 mb-6">
+                <h1 className="text-black font-bold text-xl text-center"> {recipe?.name} </h1>
             </div>
             <div className="mx-6">
                 <Image
@@ -84,7 +84,7 @@ export default function Receita() {
                     <a className="text-black text-md ml-1" > Salvar </a>
                 </div>
             </div>
-            <div className="ml-6 mt-10">
+            <div className="ml-6 mt-5">
                 <h2 className="text-black text-xl mb-2"> Ingredientes: </h2>
                 <ul className="text-black">
                     {recipe?.ingredients_description.map((ingredient: any, index: any) => (
