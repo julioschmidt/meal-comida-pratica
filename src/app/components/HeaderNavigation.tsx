@@ -30,7 +30,7 @@ export default function HeaderNavigation({ open }: HeaderNavigationProps) {
         </li>
         <li>
           <a
-            href="#"
+            href="/home"
             className="mr-6 text-right lg:px-5 py-2 block hover:text-slate-200"
           >
             Sugestão semanal
