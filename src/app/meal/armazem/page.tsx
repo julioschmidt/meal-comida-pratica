@@ -3,17 +3,21 @@ import Header from "@/app/components/Header";
 import {
     SimpleGrid,
     Card,
-    CardHeader,
     CardBody,
     Text,
     Select,
-    Box,
+    Stack,
     Button,
-    CloseButton,
+    Heading,
+    CardFooter,
+    Divider,
+    Image,
+    ButtonGroup,
+    IconButton,
 } from '@chakra-ui/react'
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { XCircle } from "phosphor-react";
+import { TrashSimple } from "phosphor-react";
 
 import { useEffect, useState } from "react";
 
@@ -102,8 +106,8 @@ export default function Armazem() {
                 <h3 className="text-[#545F71] ml-6 text-left text-2xl not-italic font-bold leading-[30px] tracking-[-0.48px]"> Seu armazem </h3>
             </div>
 
-            <div id="search-container" className="mt-6 ml-6 flex flex-col gap-2">
-                <Select placeholder='Selecione um ingrediente' style={{ width: "400px" }}
+            <div id="search-container" className="mt-6 ml-6 mr-6 flex flex-col gap-2">
+                <Select placeholder='Selecione um ingrediente'
                     value={selectedIngredient ? selectedIngredient.id : ""}
                     onChange={(e) => {
                         const selectedId = e.target.value;
@@ -117,24 +121,37 @@ export default function Armazem() {
                         </option>
                     ))}
                 </Select>
-                <Button onClick={handleAddToArmazem} className="text-black border rounded border-green-500 mr-10 w-[100px]">
+                <Button onClick={handleAddToArmazem} size="md"
+                    colorScheme='teal' variant='outline'
+                    className="mr-10 w-[100px]">
                     Adicionar
                 </Button>
             </div>
             <SimpleGrid spacing={4} className="mt-10" templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
                 {armazem &&
                     armazem.map((ingredient) => (
-                        <Card key={ingredient.ingredient_id}>
-                            <CardHeader className="flex justify-center">
-                                <div className="flex justify-end items-start w-[130px] h-[130px] bg-zinc-300">
-                                    <CloseButton
-                                        onClick={() => handleDeleteArmazemItem(ingredient.ingredient_id)}
-                                        color="red" size='sm'
-                                        className="mr-2 mt-2" />
-                                </div>
-                            </CardHeader>
-                            <CardBody className="text-black">
-                                <Text className="text-md py-2 text-black text-center">{ingredient.ingredients.name}</Text>
+                        <Card key={ingredient.ingredient_id} maxW='sm'>
+                            <CardBody>
+                                <Image
+                                    src="https://images.unsplash.com/photo-1628543108325-1c27cd7246b3?auto=format&fit=crop&q=80&w=1287&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                    alt="meat dish"
+                                    borderRadius='lg'
+                                    height={200}
+                                    width={200}
+                                />
+                                <Stack mt='3' spacing='3'>
+                                    <Heading size='md'>{ingredient.ingredients.name}</Heading>
+                                </Stack>
+                                <IconButton
+                                    variant='ghost'
+                                    className="mt-2"
+                                    colorScheme='red'
+                                    aria-label='Call Sage'
+                                    onClick={() => handleDeleteArmazemItem(ingredient.ingredient_id)}
+                                    fontSize='20px'
+                                    icon={<TrashSimple size={32} color="#dfb693" weight="duotone" />
+                                    }
+                                />
                             </CardBody>
                         </Card>
                     ))}

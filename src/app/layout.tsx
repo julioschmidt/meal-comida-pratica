@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import SessionProvider from "./providers/sessionProvider";
 import { getServerSession } from 'next-auth'
+import { ChakraProvider } from "@chakra-ui/react";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,9 +26,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <SessionProvider session={session}>
-          {children}
-        </SessionProvider>
+        <ChakraProvider>
+          <SessionProvider session={session}>
+            {children}
+          </SessionProvider>
+        </ChakraProvider>
       </body>
     </html>
   );

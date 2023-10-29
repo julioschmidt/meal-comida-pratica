@@ -9,9 +9,9 @@ interface SavedRecipeCreateArgs {
     savedAt: string;
 }
 
-async function insertSavedRecipe({userId, recipeId, savedAt}: SavedRecipeCreateArgs) { 
+async function insertSavedRecipe({ userId, recipeId, savedAt }: SavedRecipeCreateArgs) {
     const prisma = new PrismaClient()
-    try { 
+    try {
 
         const savedRecipe = await prisma.user_saved_recipe.create({
             data: {
@@ -21,7 +21,7 @@ async function insertSavedRecipe({userId, recipeId, savedAt}: SavedRecipeCreateA
             }
         })
         return true
-    } catch(e) { 
+    } catch (e) {
         console.error("Error saving recipe", e)
         return false
     }
@@ -29,24 +29,18 @@ async function insertSavedRecipe({userId, recipeId, savedAt}: SavedRecipeCreateA
 
 export async function POST(request: Request) {
     const requestBody = await request.json()
-  
-    // const session = await getServerSession()
-    
-    // if(!session) { 
-    //     return "Not allowed"
-    // }
 
     const userId = await findUserByEmail(requestBody.userEmail)
     console.log(requestBody.recipeId)
     const inserted = await insertSavedRecipe({
-        userId: userId,  
+        userId: userId,
         recipeId: requestBody.recipeId,
         savedAt: new Date().toISOString()
     })
 
-    if(!inserted) { 
+    if (!inserted) {
         return NextResponse.json("Error inserting saved recipe")
     }
-    
+
     return NextResponse.json("Saved recipe")
 }
