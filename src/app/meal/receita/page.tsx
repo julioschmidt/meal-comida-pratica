@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { BookmarkSimple } from "phosphor-react";
+import { ListItem, OrderedList, UnorderedList } from "@chakra-ui/react";
 
 export default function Receita() {
     const [recipe, setRecipe] = useState<any>(null);
@@ -64,7 +65,7 @@ export default function Receita() {
     };
 
     return (
-        <div className="h-screen bg-white overflow-hidden">
+        <div className="h-full bg-white">
             <div className="mb-6">
                 <Header />
             </div>
@@ -81,24 +82,25 @@ export default function Receita() {
                 />
                 <div className="flex cursor-pointer" onClick={handleSaveRecipe}>
                     <BookmarkSimple size={20} color="#000000" />
-                    <a className="text-black text-md ml-1" > Salvar </a>
+                    <a className="text-black text-md ml-1"> Salvar </a>
                 </div>
             </div>
-            <div className="ml-6 mt-5">
+            <div className="ml-6 mt-5 bg-white">
                 <h2 className="text-black text-xl mb-2"> Ingredientes: </h2>
-                <ul className="text-black">
+                <UnorderedList className="text-black">
                     {recipe?.ingredients_description.map((ingredient: any, index: any) => (
-                        <li key={index}>{ingredient}</li>
+                        <ListItem key={index} className="marker:text-green-700">{ingredient}</ListItem>
                     ))}
-                </ul>
+                </UnorderedList>
             </div>
-            <div className="ml-6 mt-10 text-black">
+
+            <div className="ml-6 mt-10 text-black bg-white">
                 <h2 className="text-xl mb-2"> Como preparar? </h2>
-                <ol className="text-black list-decimal ml-3">
+                <OrderedList p={2}>
                     {recipe?.instructions.map((ingredient: any, index: any) => (
-                        <li key={index}>{ingredient}</li>
+                        <ListItem className="marker:text-green-700 marker:font-bold text-justify mr-4" key={index}>{ingredient}</ListItem>
                     ))}
-                </ol>
+                </OrderedList>
             </div>
         </div>
     )

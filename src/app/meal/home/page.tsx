@@ -42,6 +42,31 @@ export default function Home() {
     redirect('/login')
   }
 
+  const handleSaveRecipe = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/recipe/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          recipeId: recipe.id,
+          userEmail: session?.user?.email,
+          savedAt: new Date().toISOString().split('T')[0],
+        }),
+      });
+
+      if (response.ok) {
+        window.location.href = 'http://localhost:3000/meal/receita'
+      } else {
+        console.error("Erro ao salvar a receita");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar a receita", error);
+    }
+  };
+
+
   return (
     <div className="h-screen bg-white overflow-hidden">
       <div className="mb-6">
@@ -65,92 +90,93 @@ export default function Home() {
         </h2>
 
         <div className={`mt-1 flex justify-center items-center w-full px-6 ${desktopClasses}`}>
-        {recipe ? (
-          <div className="w-full max-w-screen-lg">
-            <Image
-              src={recipe.image?.imagem_url || ""}
-              alt={recipe.name || "imagem de comida"}
-              width={200}
-              height={200}
-              className="w-full h-full rounded transition-transform transform hover:scale-[1.02] all ease-in-out duration-500"
-            />
-            <div id="recipe-info" className="flex flex-col justify-center align-center gap-3 mt-3">
-              <div id="category" className="flex items-center gap-2">
-                {recipe.category === 'bebidas' && <BeerBottle size={32} color="#22c55e" />}
-                {recipe.category === 'molhos' && <CookingPot size={32} color="#22c55e" />}
-                {recipe.category === 'carnes' && <Knife size={32} color="#22c55e" />}
-                {recipe.category === 'paes' && <Hamburger size={32} color="#22c55e" />}
-                {recipe.category === 'saladas' && <Flower size={32} color="#22c55e" />}
-                {recipe.category === 'legumes' && <Flower size={32} color="#22c55e" />}
-                {recipe.category === 'bolos' && <Cookie size={32} color="#22c55e" />}
-                {recipe.category === 'peixes-e-frutos-do-mar' && <Fish size={32} color="#22c55e" />}
-                {recipe.category === 'lanches' && <Hamburger size={32} color="#22c55e" />}
-                {recipe.category === 'sopas' && <CookingPot size={32} color="#22c55e" />}
-                {recipe.category === 'risotos' && <CookingPot size={32} color="#22c55e" />}
-                {recipe.category === 'aperitivos-e-antepastos' && <CookingPot size={32} color="#22c55e" />}
-                {recipe.category === 'massas' && <CookingPot size={32} color="#22c55e" />}
-                {recipe.category === 'acompanhamentos' && <CookingPot size={32} color="#22c55e" />}
-                {recipe.category === 'aves' && <Bird size={32} color="#22c55e" />}
-                {recipe.category === 'doces' && <Cookie size={32} color="#22c55e" />}
-                <p className="text-black">{recipe.category}</p>
-              </div>
-              <div className="flex align-center gap-10">
-                <div id="cooking-time" className="flex items-center gap-2">
-                  <Timer size={32} color="#22c55e" />
-                  <p className="text-black">{recipe.cooking_time}</p>
+          {recipe ? (
+            <div className="w-full max-w-screen-lg">
+              <Image
+                src={recipe.image?.imagem_url || ""}
+                alt={recipe.name || "imagem de comida"}
+                width={200}
+                height={200}
+                className="w-full h-full rounded transition-transform transform hover:scale-[1.02] all ease-in-out duration-500"
+              />
+              <div id="recipe-info" className="flex flex-col justify-center align-center gap-3 mt-3">
+                <div id="category" className="flex items-center gap-2">
+                  {recipe.category === 'bebidas' && <BeerBottle size={32} color="#22c55e" />}
+                  {recipe.category === 'molhos' && <CookingPot size={32} color="#22c55e" />}
+                  {recipe.category === 'carnes' && <Knife size={32} color="#22c55e" />}
+                  {recipe.category === 'paes' && <Hamburger size={32} color="#22c55e" />}
+                  {recipe.category === 'saladas' && <Flower size={32} color="#22c55e" />}
+                  {recipe.category === 'legumes' && <Flower size={32} color="#22c55e" />}
+                  {recipe.category === 'bolos' && <Cookie size={32} color="#22c55e" />}
+                  {recipe.category === 'peixes-e-frutos-do-mar' && <Fish size={32} color="#22c55e" />}
+                  {recipe.category === 'lanches' && <Hamburger size={32} color="#22c55e" />}
+                  {recipe.category === 'sopas' && <CookingPot size={32} color="#22c55e" />}
+                  {recipe.category === 'risotos' && <CookingPot size={32} color="#22c55e" />}
+                  {recipe.category === 'aperitivos-e-antepastos' && <CookingPot size={32} color="#22c55e" />}
+                  {recipe.category === 'massas' && <CookingPot size={32} color="#22c55e" />}
+                  {recipe.category === 'acompanhamentos' && <CookingPot size={32} color="#22c55e" />}
+                  {recipe.category === 'aves' && <Bird size={32} color="#22c55e" />}
+                  {recipe.category === 'doces' && <Cookie size={32} color="#22c55e" />}
+                  <p className="text-black">{recipe.category}</p>
                 </div>
-                
-                <div id="portions" className="flex items-center gap-2">
-                  <User size={28} color="#22c55e" />
-                  <p className="text-black">{recipe.portions} porções</p>
-                </div>
-              </div>
-            </div>
+                <div className="flex align-center gap-10">
+                  <div id="cooking-time" className="flex items-center gap-2">
+                    <Timer size={32} color="#22c55e" />
+                    <p className="text-black">{recipe.cooking_time}</p>
+                  </div>
 
-          </div>
-        ) : (
-          <p>Carregando receita...</p>
-        )}
+                  <div id="portions" className="flex items-center gap-2">
+                    <User size={28} color="#22c55e" />
+                    <p className="text-black">{recipe.portions} porções</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          ) : (
+            <p>Carregando receita...</p>
+          )}
+        </div>
+
       </div>
-        
-      </div>
-      
+
       <div className={` flex justify-center items-center w-full px-6 ${desktopClasses}`}>
         {recipe ? (
-            <div className="flex justify-around pt-3">
-              <Image
-                src={"/icons/close-icon.svg"}
-                alt={"Botão de não gostei"}
-                width={56}
-                height={56}
-                onClick={fetchRandomRecipe}
-                className="transition-transform transform hover:scale-110 all ease-in-out duration-500"
-              />
-              <Image
-                src={"/icons/heart-icon.svg"}
-                alt={"Botão de amei"}
-                width={56}
-                height={56}
-                className="transition-transform transform hover:scale-110 all ease-in-out duration-500"
-              />
-              <Image
-                src={"/icons/check-icon.svg"}
-                alt={"Botão de gostei"}
-                width={56}
-                height={56}
-                className="transition-transform transform hover:scale-110 all ease-in-out duration-500 "
-                onClick={() => { window.location.href = 'http://localhost:3000/meal/receita' }}
-              />
-            </div>
+          <div className="flex justify-around pt-3 gap-5">
+            <Image
+              src={"/icons/close-icon.svg"}
+              alt={"Botão de não gostei"}
+              width={56}
+              height={56}
+              onClick={fetchRandomRecipe}
+              className="transition-transform transform hover:scale-110 all ease-in-out duration-500"
+            />
+            <Image
+              src={"/icons/heart-icon.svg"}
+              alt={"Botão de amei"}
+              width={56}
+              height={56}
+              onClick={handleSaveRecipe}
+              className="transition-transform transform hover:scale-110 all ease-in-out duration-500"
+            />
+            <Image
+              src={"/icons/check-icon.svg"}
+              alt={"Botão de gostei"}
+              width={56}
+              height={56}
+              className="transition-transform transform hover:scale-110 all ease-in-out duration-500 "
+              onClick={() => { window.location.href = 'http://localhost:3000/meal/receita' }}
+            />
+          </div>
         ) : ''}
       </div>
 
       <div className={` flex justify-start items-center w-full px-6 ${desktopClasses} mt-3`}>
         {recipe ? (
-            <div className="flex justify-around pt-3">
-              <h3 className="text-xl text-bold text-black">Outras sugestões:</h3>
-            </div>
-        ) :''}
+          <div className="flex justify-around pt-3">
+            <h3 className="text-xl text-bold text-black">Outras sugestões:</h3>
+          </div>
+        ) : ''}
       </div>
 
 

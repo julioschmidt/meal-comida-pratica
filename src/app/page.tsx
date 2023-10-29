@@ -3,7 +3,7 @@ import Navigation from "./components/Navigation";
 
 export default function Home() {
   return (
-    <main className="bg-green-500 h-screen flex flex-col justify-center items-center">
+    <main className="bg-green-500 h-screen flex flex-col text-white justify-center items-center">
       <Image
         src="/icons/logo.svg"
         alt="Logo da empresa"
@@ -11,10 +11,10 @@ export default function Home() {
         height={182.57}
         className="py-5"
       />
-      <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold">
+      <h1 className="text-white text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold">
         MEAL
       </h1>
-      <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl pb-5">
+      <p className="text-white text-lg md:text-xl lg:text-2xl xl:text-3xl pb-5">
         Comida Prática
       </p>
       <Navigation
