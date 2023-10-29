@@ -15,27 +15,28 @@ async function findUserByEmail(email: string): Promise<any> {
 }
 
 export const options: NextAuthOptions = {
-    session: { 
+    session: {
         strategy: 'jwt',
+        maxAge: 60 * 60 * 24 * 30,
     },
     providers: [
         CredentialsProvider({
             name: 'Credentials',
             credentials: {},
             authorize: async (credentials, req) => {
-                const {email, password }  = credentials as  {
+                const { email, password } = credentials as {
                     email: string;
                     password: string;
                 }
                 const user = await findUserByEmail(email)
-                if(!user) throw new Error("User not found")
+                if (!user) throw new Error("User not found")
                 const isPasswordValid = await isSamePassword(password, user.password)
-                if(!isPasswordValid) throw new Error("Password is not valid")
+                if (!isPasswordValid) throw new Error("Password is not valid")
                 return user;
             },
         })
     ],
-    pages: { 
+    pages: {
         signIn: '/login',
     }
 }
