@@ -14,8 +14,9 @@ model image {
 }
 
 model ingredients {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(100)
+  id                      Int                       @id @default(autoincrement())
+  name                    String                    @db.VarChar(100)
+  user_ingredient_storage user_ingredient_storage[]
 }
 
 model post_comments {
@@ -97,21 +98,22 @@ model user_saved_recipe {
 }
 
 model users {
-  id                                                      Int                    @id @default(autoincrement())
-  name                                                    String?                @db.VarChar(200)
+  id                                                      Int                       @id @default(autoincrement())
+  name                                                    String?                   @db.VarChar(200)
   password                                                String
-  username                                                String?                @db.VarChar(200)
+  username                                                String?                   @db.VarChar(200)
   cep_id                                                  Int?
-  email                                                   String                 @db.VarChar(200)
+  email                                                   String                    @db.VarChar(200)
   post_comments                                           post_comments[]
   recipe                                                  recipe[]
   user_favorite_recipe                                    user_favorite_recipe[]
+  user_ingredient_storage                                 user_ingredient_storage[]
   user_posts                                              user_posts[]
   user_preferences                                        user_preferences[]
-  user_relationship_user_relationship_follower_idTousers  user_relationship[]    @relation("user_relationship_follower_idTousers")
-  user_relationship_user_relationship_following_idTousers user_relationship[]    @relation("user_relationship_following_idTousers")
+  user_relationship_user_relationship_follower_idTousers  user_relationship[]       @relation("user_relationship_follower_idTousers")
+  user_relationship_user_relationship_following_idTousers user_relationship[]       @relation("user_relationship_following_idTousers")
   user_saved_recipe                                       user_saved_recipe[]
-  ceps                                                    ceps?                  @relation(fields: [cep_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ceps                                                    ceps?                     @relation(fields: [cep_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model ceps {
@@ -139,4 +141,13 @@ model user_preferences {
   lactose_intolerance Boolean?
   gluten_intolerance  Boolean?
   users               users?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_ingredient_storage {
+  id            Int          @id @default(autoincrement())
+  user_id       Int?
+  ingredient_id Int?
+  quantity      Int?
+  ingredients   ingredients? @relation(fields: [ingredient_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users         users?       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

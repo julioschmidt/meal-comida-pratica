@@ -1,29 +1,61 @@
 "use client"
 import Header from "@/app/components/Header";
 import {
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    MenuItemOption,
-    MenuGroup,
-    MenuOptionGroup,
-    MenuDivider,
+    SimpleGrid,
+    Card,
+    CardHeader,
+    CardBody,
+    Text,
+    Select,
+    Box,
     Button,
-    Flex,
-    FormControl,
-    FormLabel,
-    FormHelperText,
 } from '@chakra-ui/react'
-import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList } from "@choc-ui/chakra-autocomplete";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
-import { PlusCircle, Trash } from "phosphor-react";
 import { useEffect, useState } from "react";
 
 export default function Armazem() {
     const [ingredients, setIngredients] = useState<any[]>([]);
-    const [selectedIngredient, setSelectedIngredient] = useState("");
-    const [tableIngredients, setTableIngredients] = useState([]);
+    const [armazem, setArmazem] = useState<any[]>([]);
+    const [selectedIngredient, setSelectedIngredient] = useState<any | null>(null);
+
+    const { data: session } = useSession()
+
+    if (!session) {
+        redirect('/login')
+    }
+
+    const handleAddToArmazem = async () => {
+        if (selectedIngredient) {
+            const response = await fetch("http://localhost:3000/api/armazem/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ sessionEmail: session?.user?.email, ingredientsId: selectedIngredient.id }),
+            });
+            fetchArmazem();
+        }
+    };
+
+    async function fetchArmazem() {
+        try {
+            const response = await fetch(
+                "http://localhost:3000/api/armazem"
+            );
+            const data = await response.json();
+            setArmazem(data);
+        } catch (error) {
+            console.error("Erro ao buscar receita", error);
+        }
+    }
+
+
+    useEffect(() => {
+        fetchArmazem();
+    }, []);
+
 
     useEffect(() => {
         async function fetchIngredients() {
@@ -32,7 +64,6 @@ export default function Armazem() {
                     const ingredients = JSON.parse(localStorage.getItem("ingredients") || "[]");
                     setIngredients(ingredients);
                 }
-
                 const response = await fetch(
                     "http://localhost:3000/api/ingredients"
                 );
@@ -45,11 +76,8 @@ export default function Armazem() {
                 console.error("Erro ao buscar receita", error);
             }
         }
-
         fetchIngredients();
     }, [])
-
-
 
     return (
         <div className="h-screen bg-white overflow-hidden">
@@ -60,62 +88,48 @@ export default function Armazem() {
                 <h3 className="text-[#545F71] ml-6 text-left text-2xl not-italic font-bold leading-[30px] tracking-[-0.48px]"> Seu armazem </h3>
             </div>
 
-            <div id="search-container" className="mt-6 ml-6 flex items-end gap-40">
-                <div className="relative">
-                    <div className="text-left text-black mb-2 text-xm font-normal leading-[30px]">Selecionar:</div>
-                    <Flex justify="center" align="center" w="full">
-                        <FormControl w="60">
-                            <AutoComplete openOnFocus>
-                                <AutoCompleteInput variant="filled"
-                                    onChange={(e: any) => setSelectedIngredient(e.target.value)}
-                                    className="bg-white border text-black border-gray-300" />
-                                <AutoCompleteList bg="white">
-                                    {ingredients.map((ingredient) => (
-                                        <AutoCompleteItem
-                                            key={`option-${ingredient.id}`}
-                                            value={ingredient.name}
-                                            textTransform="capitalize"
-                                            className="text-black"
-                                            bg="white"
-                                        >
-                                            {ingredient.name}
-                                        </AutoCompleteItem>
-                                    ))}
-                                </AutoCompleteList>
-                            </AutoComplete>
-                        </FormControl>
-                    </Flex>
-                </div>
-                <PlusCircle size={32} color="#102f4a" />
+            <div id="search-container" className="mt-6 ml-6 flex flex-col gap-2">
+                <Select placeholder='Selecione um ingrediente' style={{ width: "400px" }}
+                    value={selectedIngredient ? selectedIngredient.id : ""}
+                    onChange={(e) => {
+                        const selectedId = e.target.value;
+                        const selected = ingredients.find((ingredient) => ingredient.id == selectedId);
+                        setSelectedIngredient(selected);
+                        console.log(session)
+                    }}
+                    className="border rounded-md text-black border-green-500">
+                    {ingredients.map((ingredient, index) => (
+                        <option key={index} value={ingredient.id}>
+                            {ingredient.name}
+                        </option>
+                    ))}
+                </Select>
+                <Button onClick={handleAddToArmazem} className="text-black border rounded border-green-500 mr-10 w-[100px]">
+                    Adicionar
+                </Button>
             </div>
-            <div id="items" className="flex justify-center items-center mt-6">
-                <table className="w-[350px] text-center">
-                    <thead className="text-black">
-                        <tr className="">
-                            <th>Ingrediente</th>
-                            <th>Quantidade</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody className="text-black text-center bg-zinc-200">
-                        <tr>
-                            <td>Queijo</td>
-                            <td>30g</td>
-                            <td className="flex justify-center items-center"><Trash size={24} color="#102f4a" /></td>
-                        </tr>
-                        {tableIngredients.map((ingredient, index) => (
-                            <tr key={index}>
-                                <td>{ingredient}</td>
-                                <td>30g</td>
-                                <td className="flex justify-center items-center">
-                                    <Trash size={24} color="#102f4a" />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            <SimpleGrid spacing={4} className="mt-10" templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
+                <Card>
+                    <CardHeader className="flex justify-center">
+                        <div className="flex justify-center items-center w-[150px] h-[150px] bg-zinc-300"></div>
+                    </CardHeader>
+                    <CardBody className="text-black">
+                        <Text className="text-2xl py-2 text-center"> Peixe </Text>
+                    </CardBody>
+                </Card>
+                {armazem &&
+                    armazem.map((ingredient) => (
+                        <Card key={ingredient.ingredient_id}>
+                            <CardHeader className="flex justify-center">
+                                <div className="flex justify-center items-center w-[150px] h-[150px] bg-zinc-300"></div>
+                            </CardHeader>
+                            <CardBody className="text-black">
+                                <Text className="text-2xl py-2 text-black text-center">{ingredient.ingredients.name}</Text>
+                            </CardBody>
+                        </Card>
+                    ))}
+            </SimpleGrid>
+        </div >
     )
 }
 

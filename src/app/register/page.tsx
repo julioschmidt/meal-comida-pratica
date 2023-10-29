@@ -51,6 +51,7 @@ export default function RegisterPage() {
       }
     }
   };
+
   useEffect(() => {
     const fetchAddressData = async () => {
       if (cep.length === 9) {
@@ -159,9 +160,8 @@ export default function RegisterPage() {
                       onChange={(e) => setAddress(e.target.value)}
                       placeholder="Rua, número, bairro"
                       label="Endereço"
-                      inputClassName={`${
-                        addressEditable ? "bg-white" : "bg-slate-200"
-                      }
+                      inputClassName={`${addressEditable ? "bg-white" : "bg-slate-200"
+                        }
                         w-80 h-10 p-3 rounded-md border border-slate-600`}
                     />
                   </div>
