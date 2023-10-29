@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { findUserByEmail } from "@/app/models/User";
 
-export async function POST(request: Request) {
+export async function DELETE(request: Request) {
     const prisma = new PrismaClient();
     const requestBody = await request.json()
 
@@ -18,15 +18,15 @@ export async function POST(request: Request) {
         }
     })
 
-    if (user && !exist) {
-        const armazem = await prisma.user_ingredient_storage.create({
-            data: {
+    if (exist) {
+        const deleteItem = await prisma.user_ingredient_storage.delete({
+            where: {
+                id: exist.id,
                 user_id: user,
                 ingredient_id: ingredientId,
-                quantity: 0
             }
         })
-        return NextResponse.json(armazem);
+        return NextResponse.json({ deleteItem });
     }
     return NextResponse.json("O ingrediente já existe");
 }

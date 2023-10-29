@@ -9,9 +9,11 @@ import {
     Select,
     Box,
     Button,
+    CloseButton,
 } from '@chakra-ui/react'
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { XCircle } from "phosphor-react";
 
 import { useEffect, useState } from "react";
 
@@ -38,6 +40,18 @@ export default function Armazem() {
             fetchArmazem();
         }
     };
+
+    const handleDeleteArmazemItem = async (ingredientId: string | number) => {
+        const response = await fetch("http://localhost:3000/api/armazem/delete", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ sessionEmail: session?.user?.email, ingredientsId: ingredientId }),
+        });
+        fetchArmazem()
+    };
+
 
     async function fetchArmazem() {
         try {
@@ -95,7 +109,6 @@ export default function Armazem() {
                         const selectedId = e.target.value;
                         const selected = ingredients.find((ingredient) => ingredient.id == selectedId);
                         setSelectedIngredient(selected);
-                        console.log(session)
                     }}
                     className="border rounded-md text-black border-green-500">
                     {ingredients.map((ingredient, index) => (
@@ -109,22 +122,19 @@ export default function Armazem() {
                 </Button>
             </div>
             <SimpleGrid spacing={4} className="mt-10" templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
-                <Card>
-                    <CardHeader className="flex justify-center">
-                        <div className="flex justify-center items-center w-[150px] h-[150px] bg-zinc-300"></div>
-                    </CardHeader>
-                    <CardBody className="text-black">
-                        <Text className="text-2xl py-2 text-center"> Peixe </Text>
-                    </CardBody>
-                </Card>
                 {armazem &&
                     armazem.map((ingredient) => (
                         <Card key={ingredient.ingredient_id}>
                             <CardHeader className="flex justify-center">
-                                <div className="flex justify-center items-center w-[150px] h-[150px] bg-zinc-300"></div>
+                                <div className="flex justify-end items-start w-[130px] h-[130px] bg-zinc-300">
+                                    <CloseButton
+                                        onClick={() => handleDeleteArmazemItem(ingredient.ingredient_id)}
+                                        color="red" size='sm'
+                                        className="mr-2 mt-2" />
+                                </div>
                             </CardHeader>
                             <CardBody className="text-black">
-                                <Text className="text-2xl py-2 text-black text-center">{ingredient.ingredients.name}</Text>
+                                <Text className="text-md py-2 text-black text-center">{ingredient.ingredients.name}</Text>
                             </CardBody>
                         </Card>
                     ))}
