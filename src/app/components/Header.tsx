@@ -7,8 +7,8 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   return (
     <header className="">
-      <div className="h-full flex items-center text-white justify-between flex-wrap w-full py-2 bg-green-500">
-        <a href="/meal/home" className="ml-6 text-2xl font-bold	">
+      <div className="h-full flex items-center justify-between flex-wrap w-full py-2 bg-green-500">
+        <a href="/meal/home" className="text-white ml-6 text-2xl font-bold	">
           meal
         </a>
         <List

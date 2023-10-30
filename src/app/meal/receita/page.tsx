@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import Image from "next/image";
+import {
+    Image
+} from '@chakra-ui/react'
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { BookmarkSimple } from "phosphor-react";
@@ -72,19 +74,22 @@ export default function Receita() {
             <div className="mx-6 mb-6">
                 <h1 className="text-black font-bold text-xl text-center"> {recipe?.name} </h1>
             </div>
-            <div className="mx-6">
-                <Image
-                    src={recipe?.image?.imagem_url || ""}
-                    alt={recipe?.name || "imagem de comida"}
-                    width={200}
-                    height={200}
-                    className="w-full h-full rounded mb-2"
-                />
-                <div className="flex cursor-pointer" onClick={handleSaveRecipe}>
-                    <BookmarkSimple size={20} color="#000000" />
-                    <a className="text-black text-md ml-1"> Salvar </a>
+            <div className="mx-6 flex flex-col justify-center items-center">
+                <div className="relative">
+                    <Image
+                        src={recipe?.image?.imagem_url || ""}
+                        alt={recipe?.name || "imagem de comida"}
+                        borderRadius='lg'
+                        height={300}
+                        width={400}
+                    />
+                    <div className="flex cursor-pointer absolute bottom-0 left-0" onClick={handleSaveRecipe}>
+                        <BookmarkSimple size={20} color="#000000" />
+                        <a className="text-black text-md ml-1">Salvar</a>
+                    </div>
                 </div>
             </div>
+
             <div className="ml-6 mt-5 bg-white">
                 <h2 className="text-black text-xl mb-2"> Ingredientes: </h2>
                 <UnorderedList className="text-black">
