@@ -1,8 +1,9 @@
 'use client'
 import Header from "@/app/components/Header";
-import { Avatar, Wrap, WrapItem } from "@chakra-ui/react";
+import { Avatar, FormControl, FormLabel, Input, Stack, Wrap, WrapItem, useCheckboxGroup, Text, Checkbox } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+
 
 export default function Configuracao() {
     const [userProfile, setUserProfile] = useState({
@@ -36,14 +37,34 @@ export default function Configuracao() {
     return (
         <div className="h-screen bg-white overflow-hidden">
             <Header />
-
-            <div>
+            <div className="flex justify-center items-center mt-10">
                 <Wrap>
                     <WrapItem>
-                        <Avatar name="Andre Luiz" size='lg' className="bg-zinc-300" />
+                        <Avatar name="Andre Luiz" size='lg' bg='#71717A' />
                     </WrapItem>
                 </Wrap>
             </div>
-        </div>
+            <div>
+                <FormControl as='fieldset'>
+                    <FormLabel as='legend'>Nome</FormLabel>
+                    <Input type="text" name="nome" onChange={handleInputChange} />
+                </FormControl>
+                <FormControl as='fieldset'>
+                    <FormLabel as='legend'>username</FormLabel>
+                    <Input type="text" name="username" onChange={handleInputChange} />
+                </FormControl>
+                <FormControl as='fieldset'>
+                    <FormLabel as='legend'></FormLabel>
+                    <Stack spacing={5} direction='row'>
+                        <Checkbox colorScheme='green' defaultChecked>
+                            Checkbox
+                        </Checkbox>
+                        <Checkbox colorScheme='green' defaultChecked>
+                            Checkbox
+                        </Checkbox>
+                    </Stack>
+                </FormControl>
+            </div>
+        </div >
     )
 }
