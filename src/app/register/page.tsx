@@ -67,6 +67,8 @@ export default function RegisterPage() {
             if (!cepData.logradouro) {
               setAddress("");
               setAddrressEditable(true);
+              setCity(cepData.cities.city_name);
+              setDistrict(cepData.cities.state.state_initials);
             } else {
               setAddress(cepData.logradouro);
               setCity(cepData.cities.city_name);
