@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -52,13 +53,6 @@ model recipe_ingredients {
   ingredients_id        Int
 }
 
-model state {
-  id             Int      @id @default(autoincrement())
-  state_initials String   @db.VarChar(10)
-  state_name     String   @db.VarChar(100)
-  cities         cities[]
-}
-
 model user_favorite_recipe {
   id        Int      @id @default(autoincrement())
   user_id   Int
@@ -102,8 +96,8 @@ model users {
   name                                                    String?                   @db.VarChar(200)
   password                                                String
   username                                                String?                   @db.VarChar(200)
-  cep_id                                                  Int?
   email                                                   String                    @db.VarChar(200)
+  cep                                                     String?                   @db.VarChar(20)
   post_comments                                           post_comments[]
   recipe                                                  recipe[]
   user_favorite_recipe                                    user_favorite_recipe[]
@@ -113,25 +107,6 @@ model users {
   user_relationship_user_relationship_follower_idTousers  user_relationship[]       @relation("user_relationship_follower_idTousers")
   user_relationship_user_relationship_following_idTousers user_relationship[]       @relation("user_relationship_following_idTousers")
   user_saved_recipe                                       user_saved_recipe[]
-  ceps                                                    ceps?                     @relation(fields: [cep_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model ceps {
-  id         Int     @id @default(autoincrement())
-  cep        String  @db.VarChar(10)
-  bairro     String? @db.VarChar(200)
-  fk_cities  Int?
-  logradouro String? @db.VarChar(255)
-  cities     cities? @relation(fields: [fk_cities], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users      users[]
-}
-
-model cities {
-  id        Int    @id
-  city_name String @db.VarChar(255)
-  fk_state  Int
-  ceps      ceps[]
-  state     state  @relation(fields: [fk_state], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model user_preferences {
