@@ -15,6 +15,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
     docker compose exec web npx prisma db seed
 ```
 
+```
+    localhost:3000
+```
+
 
 ## Getting Started
 
