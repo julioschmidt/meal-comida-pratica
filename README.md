@@ -1,5 +1,21 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+
+# João - Leia Aqui
+
+```
+    docker compose up
+```
+
+```
+    docker compose exec web npx prisma db push
+```
+
+```
+    docker compose exec web npx prisma db seed
+```
+
+
 ## Getting Started
 
 First, run the development server:

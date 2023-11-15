@@ -58,21 +58,21 @@ export default function RegisterPage() {
         setAddrressEditable(false);
         try {
           const response = await fetch(
-            `http://localhost:3000/api/cep?cep=${cep}`
+            `https://viacep.com.br/ws/${cep}/json/`
           );
-          const data = await response.json();
-          if (data.success === true) {
+
+          if (response.ok) {
+            const data = await response.json();
             setCepError("");
-            const cepData = data.cepData;
-            if (!cepData.logradouro) {
-              setAddress("");
+            if (!data.logradouro) {
+              setAddress("")
               setAddrressEditable(true);
-              setCity(cepData.cities.city_name);
-              setDistrict(cepData.cities.state.state_initials);
+              setCity(data.localidade);
+              setDistrict(data.uf)
             } else {
-              setAddress(cepData.logradouro);
-              setCity(cepData.cities.city_name);
-              setDistrict(cepData.cities.state.state_initials);
+              setAddress(data.logradouro);
+              setCity(data.localidade);
+              setDistrict(data.uf);
             }
           } else {
             setCepError("CEP não encontrado");
