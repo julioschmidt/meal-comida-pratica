@@ -4,9 +4,19 @@ import Header from "../../components/Header";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { BeerBottle, Bird, Cookie, CookingPot, Fish, Flower, Hamburger, Knife, Timer, User } from "phosphor-react";
+import {
+  BeerBottle,
+  Bird,
+  Cookie,
+  CookingPot,
+  Fish,
+  Flower,
+  Hamburger,
+  Knife,
+  Timer,
+  User,
+} from "phosphor-react";
 import { Box, SimpleGrid, Text } from "@chakra-ui/react";
-
 
 export default function Home() {
   const mobileClasses = "md:flex-col items-center md:w-full";
@@ -16,10 +26,11 @@ export default function Home() {
     id: number;
   }
 
-// fazer um array de receitas
+  // fazer um array de receitas
   const [recipes, setRecipes] = useState<any[]>([]);
-  
-  const [prefersQuickRecipes, setPreferesQuickRecipes] = useState<boolean>(false);
+
+  const [prefersQuickRecipes, setPreferesQuickRecipes] =
+    useState<boolean>(false);
   const [prefersIntGluten, setPrefersIntGluten] = useState<boolean>(false);
   const [prefersIntLactose, setPrefersIntLactose] = useState<boolean>(false);
   // const [preferences, setPreferences] = useState({
@@ -28,23 +39,27 @@ export default function Home() {
   //   prefersIntGluten: false,
   // });
 
-  async function fetchRandomRecipe(prefersQuickRecipes: boolean, prefersIntGluten: boolean, prefersIntLactose: boolean) {
+  async function fetchRandomRecipe(
+    prefersQuickRecipes: boolean,
+    prefersIntGluten: boolean,
+    prefersIntLactose: boolean
+  ) {
     try {
       let newRecipes = [];
       const response = await fetch(
         "http://localhost:3000/api/recipe/random?altura=840&largura=480"
-      );  
+      );
       const data = await response.json();
       const category = data.category;
       for (let i = 0; i < 4; i++) {
         const response = await fetch(
-              `http://localhost:3000/api/recipe/random/category?altura=840&largura=480&category=${category}&quick=${prefersQuickRecipes}&gluten=${prefersIntGluten}&lactose=${prefersIntLactose}`
-          );  
-          const data = await response.json();
-          newRecipes.push(data);
+          `http://localhost:3000/api/recipe/random/category?altura=840&largura=480&category=${category}&quick=${prefersQuickRecipes}&gluten=${prefersIntGluten}&lactose=${prefersIntLactose}`
+        );
+        const data = await response.json();
+        newRecipes.push(data);
       }
-        setRecipes(newRecipes);
-        localStorage.setItem("randomRecipes", JSON.stringify(newRecipes));
+      setRecipes(newRecipes);
+      localStorage.setItem("randomRecipes", JSON.stringify(newRecipes));
     } catch (error) {
       console.error("Erro ao buscar receita", error);
     }
@@ -60,17 +75,17 @@ export default function Home() {
 
       if (data.user_preferences && data.user_preferences.length > 0) {
         const userPreferences = data.user_preferences[0];
-    
+
         if (userPreferences.quick_recipes !== null) {
-            tempPrefersQuickRecipes = userPreferences.quick_recipes;
+          tempPrefersQuickRecipes = userPreferences.quick_recipes;
         }
 
         if (userPreferences.lactose_intolerance !== null) {
-            tempPrefersIntLactose = userPreferences.lactose_intolerance;
+          tempPrefersIntLactose = userPreferences.lactose_intolerance;
         }
 
         if (userPreferences.gluten_intolerance !== null) {
-            tempPrefersIntGluten = userPreferences.gluten_intolerance;
+          tempPrefersIntGluten = userPreferences.gluten_intolerance;
         }
       }
 
@@ -78,32 +93,34 @@ export default function Home() {
       setPrefersIntLactose(tempPrefersIntLactose);
       setPrefersIntGluten(tempPrefersIntGluten);
 
-      fetchRandomRecipe(tempPrefersQuickRecipes, tempPrefersIntGluten, tempPrefersIntLactose);
+      fetchRandomRecipe(
+        tempPrefersQuickRecipes,
+        tempPrefersIntGluten,
+        tempPrefersIntLactose
+      );
     } catch (error) {
       console.error("Erro ao buscar as preferências do usuário:", error);
     }
-}
+  }
 
-  
   // useEffect(() => {
   //   fetchUserPreferences();
 
   // }, []);
-  
+
   useEffect(() => {
     const storedRandomRecipe = localStorage.getItem("randomRecipes");
     if (storedRandomRecipe) {
-        setRecipes(JSON.parse(storedRandomRecipe));
+      setRecipes(JSON.parse(storedRandomRecipe));
     } else {
       fetchUserPreferences();
     }
-}, []);
+  }, []);
 
-  
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
   if (!session) {
-    redirect('/login')
+    redirect("/login");
   }
 
   const handleSaveRecipe = async (recipe: Recipe) => {
@@ -116,12 +133,12 @@ export default function Home() {
         body: JSON.stringify({
           recipeId: recipe.id,
           userEmail: session?.user?.email,
-          savedAt: new Date().toISOString().split('T')[0],
+          savedAt: new Date().toISOString().split("T")[0],
         }),
       });
 
       if (response.ok) {
-        window.location.href = 'http://localhost:3000/meal/receita'
+        window.location.href = "http://localhost:3000/meal/receita";
       } else {
         console.error("Erro ao salvar a receita");
       }
@@ -147,12 +164,20 @@ export default function Home() {
           O que vamos comer hoje?
         </h1>
       </div>
-      <div className={`${recipes ? 'border-2 border-slate-500 bg-slate-50' : ''}  mr-2 ml-2 p-2 rounded `}>
-        <h2 className={`flex justify-center items-center text-xl text-center text-bold text-black w-full px-6 ${desktopClasses}`}>
+      <div
+        className={`${
+          recipes ? "border-2 border-slate-500 bg-slate-50" : ""
+        }  mr-2 ml-2 p-2 rounded `}
+      >
+        <h2
+          className={`flex justify-center items-center text-xl text-center text-bold text-black w-full px-6 ${desktopClasses}`}
+        >
           {recipes[0] ? recipes[0].name : "Sugestão:"}
         </h2>
 
-        <div className={`mt-1 flex justify-center items-center w-full px-6 ${desktopClasses}`}>
+        <div
+          className={`mt-1 flex justify-center items-center w-full px-6 ${desktopClasses}`}
+        >
           {recipes[0] ? (
             <div className="w-full max-w-screen-lg">
               <Image
@@ -162,24 +187,59 @@ export default function Home() {
                 height={200}
                 className="w-full h-full rounded transition-transform transform hover:scale-[1.02] all ease-in-out duration-500"
               />
-              <div id="recipes[0]-info" className="flex flex-col justify-center align-center gap-3 mt-3">
+              <div
+                id="recipes[0]-info"
+                className="flex flex-col justify-center align-center gap-3 mt-3"
+              >
                 <div id="category" className="flex items-center gap-2">
-                  {recipes[0].category === 'bebidas' && <BeerBottle size={32} color="#22c55e" />}
-                  {recipes[0].category === 'molhos' && <CookingPot size={32} color="#22c55e" />}
-                  {recipes[0].category === 'carnes' && <Knife size={32} color="#22c55e" />}
-                  {recipes[0].category === 'paes' && <Hamburger size={32} color="#22c55e" />}
-                  {recipes[0].category === 'saladas' && <Flower size={32} color="#22c55e" />}
-                  {recipes[0].category === 'legumes' && <Flower size={32} color="#22c55e" />}
-                  {recipes[0].category === 'bolos' && <Cookie size={32} color="#22c55e" />}
-                  {recipes[0].category === 'peixes-e-frutos-do-mar' && <Fish size={32} color="#22c55e" />}
-                  {recipes[0].category === 'lanches' && <Hamburger size={32} color="#22c55e" />}
-                  {recipes[0].category === 'sopas' && <CookingPot size={32} color="#22c55e" />}
-                  {recipes[0].category === 'risotos' && <CookingPot size={32} color="#22c55e" />}
-                  {recipes[0].category === 'aperitivos-e-antepastos' && <CookingPot size={32} color="#22c55e" />}
-                  {recipes[0].category === 'massas' && <CookingPot size={32} color="#22c55e" />}
-                  {recipes[0].category === 'acompanhamentos' && <CookingPot size={32} color="#22c55e" />}
-                  {recipes[0].category === 'aves' && <Bird size={32} color="#22c55e" />}
-                  {recipes[0].category === 'doces' && <Cookie size={32} color="#22c55e" />}
+                  {recipes[0].category === "bebidas" && (
+                    <BeerBottle size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "molhos" && (
+                    <CookingPot size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "carnes" && (
+                    <Knife size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "paes" && (
+                    <Hamburger size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "saladas" && (
+                    <Flower size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "legumes" && (
+                    <Flower size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "bolos" && (
+                    <Cookie size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "peixes-e-frutos-do-mar" && (
+                    <Fish size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "lanches" && (
+                    <Hamburger size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "sopas" && (
+                    <CookingPot size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "risotos" && (
+                    <CookingPot size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "aperitivos-e-antepastos" && (
+                    <CookingPot size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "massas" && (
+                    <CookingPot size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "acompanhamentos" && (
+                    <CookingPot size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "aves" && (
+                    <Bird size={32} color="#22c55e" />
+                  )}
+                  {recipes[0].category === "doces" && (
+                    <Cookie size={32} color="#22c55e" />
+                  )}
                   <p className="text-black">{recipes[0].category}</p>
                 </div>
                 <div className="flex align-center gap-10">
@@ -194,16 +254,16 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-
             </div>
           ) : (
             <p>Carregando receita...</p>
           )}
         </div>
-
       </div>
 
-      <div className={` flex justify-center items-center w-full px-6 ${desktopClasses}`}>
+      <div
+        className={` flex justify-center items-center w-full px-6 ${desktopClasses}`}
+      >
         {recipes[0] ? (
           <div className="flex justify-around pt-3 gap-5">
             <Image
@@ -220,10 +280,9 @@ export default function Home() {
               width={56}
               height={56}
               onClick={(e) => {
-                localStorage.setItem('likedRecipe', JSON.stringify(recipes[0]));
-                handleSaveRecipe(recipes[0])
-              }
-            }
+                localStorage.setItem("likedRecipe", JSON.stringify(recipes[0]));
+                handleSaveRecipe(recipes[0]);
+              }}
               className="transition-transform transform hover:scale-110 all ease-in-out duration-500"
             />
             <Image
@@ -232,83 +291,101 @@ export default function Home() {
               width={56}
               height={56}
               className="transition-transform transform hover:scale-110 all ease-in-out duration-500 "
-              onClick={() => { 
-                localStorage.setItem('likedRecipe', JSON.stringify(recipes[0]));
-                window.location.href = 'http://localhost:3000/meal/receita'}}
+              onClick={() => {
+                localStorage.setItem("likedRecipe", JSON.stringify(recipes[0]));
+                window.location.href = "http://localhost:3000/meal/receita";
+              }}
             />
           </div>
-        ) : ''}
+        ) : (
+          ""
+        )}
       </div>
 
-
-          
-      <div className={` w-full px-6 ${desktopClasses} mt-3 `} style={{textAlign: 'center'}}>
+      <div
+        className={` w-full px-6 ${desktopClasses} mt-3 `}
+        style={{ textAlign: "center" }}
+      >
         {recipes[0] ? (
           <div className="flex justify-around pt-3">
-            <h3 className="text-xl text-bold text-black">Outras sugestões de {recipes[0].category}:</h3>
+            <h3 className="text-md text-bold text-black">
+              Outras sugestões de {recipes[0].category}:
+            </h3>
           </div>
-        ) : 'Nada ainda'}
+        ) : (
+          "Nada ainda"
+        )}
       </div>
 
-      <div className={`mt-1 flex justify-center items-center w-full px-6 ${desktopClasses}`}>
+      <div
+        className={`mt-1 flex justify-center items-center w-full px-6 ${desktopClasses}`}
+      >
         <SimpleGrid minChildWidth="25vh" spacing={10}>
           {recipes.slice(1).map((recipe) => (
-
-            <><div className={`${recipes ? 'border-2 border-slate-500 bg-slate-50' : ''}  mr-2 ml-2 p-2 rounded `}>
-              <Box mb={10} key={recipe.id} height={250}>
-                <Text textAlign="center">
-                  {recipe ? recipe.name : "Carregando"}
-                </Text>
-                <Image
-                  src={recipe.image?.imagem_url || ""}
-                  alt={recipe.name || "imagem de comida"}
-                  width={200}
-                  height={200}
-                  className="w-full h-full rounded transition-transform transform hover:scale-[1.02] all ease-in-out duration-500" />
-                <div className="flex align-center gap-5">
-                  <div id="cooking-time" className="flex items-center gap-2">
-                    <Timer size={32} color="#22c55e" />
-                    <p className="text-black">{recipe.cooking_time}</p>
+            <>
+              <div
+                className={`${
+                  recipes ? "border border-slate-500 bg-slate-50" : ""
+                }  mr-2 ml-2 p-2 rounded `}
+              >
+                <Box key={recipe.id}>
+                  <Text textAlign="center">
+                    {recipe ? recipe.name : "Carregando"}
+                  </Text>
+                  <Image
+                    src={recipe.image?.imagem_url || ""}
+                    alt={recipe.name || "imagem de comida"}
+                    width={200}
+                    height={200}
+                    className="w-full h-full rounded transition-transform transform hover:scale-[1.02] all ease-in-out duration-500"
+                  />
+                  <div className="flex align-center gap-5">
+                    <div id="cooking-time" className="flex items-center gap-2">
+                      <Timer size={32} color="#22c55e" />
+                      <p className="text-black">{recipe.cooking_time}</p>
+                    </div>
+                    <div id="portions" className="flex items-center gap-2">
+                      <User size={28} color="#22c55e" />
+                      <p className="text-black">{recipe.portions} porções</p>
+                    </div>
                   </div>
-                  <div id="portions" className="flex items-center gap-2">
-                    <User size={28} color="#22c55e" />
-                    <p className="text-black">{recipe.portions} porções</p>
-                  </div>
+                </Box>
+                <div className="flex align-center justify-center">
+                  <Image
+                    src={"/icons/heart-icon.svg"}
+                    alt={"Botão de amei"}
+                    width={40}
+                    height={40}
+                    onClick={(e) => {
+                      localStorage.setItem(
+                        "likedRecipe",
+                        JSON.stringify(recipe)
+                      );
+                      handleSaveRecipe(recipe);
+                    }}
+                    className="transition-transform transform hover:scale-110 all ease-in-out duration-500"
+                  />
+                  <Image
+                    src={"/icons/check-icon.svg"}
+                    alt={"Botão de gostei"}
+                    width={40}
+                    height={40}
+                    className="transition-transform transform hover:scale-110 all ease-in-out duration-500 "
+                    onClick={() => {
+                      localStorage.setItem(
+                        "likedRecipe",
+                        JSON.stringify(recipe)
+                      );
+                      window.location.href =
+                        "http://localhost:3000/meal/receita";
+                    }}
+                  />
                 </div>
-              </Box>
-            </div>
-            <div className="flex justify-around gap-5">
-                <Image
-                  src={"/icons/heart-icon.svg"}
-                  alt={"Botão de amei"}
-                  width={40}
-                  height={40}
-                  
-                  onClick={(e) => {
-                    localStorage.setItem('likedRecipe', JSON.stringify(recipe));
-                    handleSaveRecipe(recipe)}
-                  }
-                  className="transition-transform transform hover:scale-110 all ease-in-out duration-500" />
-                <Image
-                  src={"/icons/check-icon.svg"}
-                  alt={"Botão de gostei"}
-                  width={40}
-                  height={40}
-                  className="transition-transform transform hover:scale-110 all ease-in-out duration-500 "
-                  onClick={() => { 
-                    localStorage.setItem('likedRecipe', JSON.stringify(recipe));
-                    window.location.href = 'http://localhost:3000/meal/receita'; } } />
               </div>
-              </>
+            </>
           ))}
         </SimpleGrid>
-
       </div>
-
-
-
-
     </div>
   );
 }
-
