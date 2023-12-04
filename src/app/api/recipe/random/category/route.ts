@@ -34,8 +34,6 @@ async function generateRandomRecipeId(category: string, quick: boolean, lactose:
     });
 
     let filteredRecipes = allRecipes;
-    console.log(quick);
-    console.log(lactose);
     if (lactose) {
         filteredRecipes = filteredRecipes.filter(recipe => {
             for (let ingredient of recipe.ingredients_description) {

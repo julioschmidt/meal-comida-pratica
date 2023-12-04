@@ -1,6 +1,6 @@
 'use client'
 import Header from "@/app/components/Header";
-import { Avatar, Editable, FormControl, FormLabel, Input, Stack, Wrap, WrapItem, useCheckboxGroup, Text, Checkbox, Select, SimpleGrid } from "@chakra-ui/react";
+import { Avatar, Editable, FormControl, FormLabel, Input, Stack, Wrap, WrapItem, useCheckboxGroup, Text, Checkbox, Select, SimpleGrid, Tag } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import Button from "../../components/Button";
@@ -15,6 +15,8 @@ export default function Configuracao() {
     const [prefersIntLactose, setPrefersIntLactose] = useState<boolean>(false);
     const [ingredients, setIngredients] = useState<any[]>([]);
     const [selectedIngredient, setSelectedIngredient] = useState<any | null>(null);
+    const [savedRecipes, setSavedRecipes] = useState<number[]>([]);
+    const [recipes, setRecipes] = useState<any[]>([]);
 
     const [isEditing, setIsEditing] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
@@ -104,9 +106,55 @@ export default function Configuracao() {
         }
     }
 
+    async function fetchUserRecipes() {
+        try {
+            const response = await fetch("http://localhost:3000/api/user/recipes");
+            const data = await response.json();
+            const recipeIds: number[] = data.map((item: {recipe_id: number}) => item.recipe_id);
+            const uniqueRecipeIds = [...new Set(recipeIds)];
+            setSavedRecipes(uniqueRecipeIds);
+        } catch (error) {
+            console.error("Erro ao buscar receitas salvas", error);
+        }
+    }
+
+    async function fetchAllRecipes() {
+        try {
+            const recipePromises = savedRecipes.map((recipeId) => 
+                fetch(`http://localhost:3000/api/recipe?id=${recipeId}`)
+            );
+            const responses = await Promise.all(recipePromises);
+            const recipes = await Promise.all(responses.map((response) => response.json()));
+            setRecipes(recipes);
+        } catch (error) {
+            console.log("Erro ao buscar as receitas salvas do usuário", error);
+        }
+    }
+
+    async function handleDelete(id: number) {
+        const response = await fetch("http://localhost:3000/api/user/recipes/delete", {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ sessionEmail: session?.user?.email, recipeId: id }),
+        });
+        if (response.ok) {
+            window.open("/meal/configuracao", "_self");
+            console.log("ok"); //verificar algo para renderizar para usuario
+        } else {
+            console.log("not ok"); //verificar algo para renderizar para usuario
+        }
+    }
+
     useEffect(() => {
         fetchUser();
+        fetchUserRecipes();
     },[]);
+
+    useEffect(() => {
+        fetchAllRecipes();
+    }, [savedRecipes])
 
     if (!session) {
         // Redirect or handle unauthorized access here
@@ -175,6 +223,28 @@ export default function Configuracao() {
                             />
                     </div>
                 </form>
+            </div>
+
+            <div className="mt-10">
+                <h2 style={{ textAlign: "center", marginBottom: '20px'} }
+                >Receitas Salvas</h2>
+                {recipes.map((recipe, index) => (
+                <div key={index} className="flex">
+                    <h3
+                    className="mt-2"
+                    style={{padding: '0 10px'}}
+                    onClick={() => { 
+                        localStorage.setItem('likedRecipe', JSON.stringify(recipe));
+                        window.location.href = 'http://localhost:3000/meal/receita'; } }
+                    >{recipe.name}</h3>
+                    <Button
+                    onClick={() => handleDelete(recipe.id)}
+                    text={'Excluir'}
+                    className="text-white text-base font-semibold bg-green-500 rounded-md"
+                    />
+                    {/* Adicione mais detalhes da receita aqui */}
+                </div>
+                ))}
             </div>
 
         </div >

@@ -36,7 +36,6 @@ export default function Home() {
       );  
       const data = await response.json();
       const category = data.category;
-      console.log(data);
       for (let i = 0; i < 4; i++) {
         const response = await fetch(
               `http://localhost:3000/api/recipe/random/category?altura=840&largura=480&category=${category}&quick=${prefersQuickRecipes}&gluten=${prefersIntGluten}&lactose=${prefersIntLactose}`
@@ -78,7 +77,6 @@ export default function Home() {
       setPreferesQuickRecipes(tempPrefersQuickRecipes);
       setPrefersIntLactose(tempPrefersIntLactose);
       setPrefersIntGluten(tempPrefersIntGluten);
-      console.log(tempPrefersIntLactose);
 
       fetchRandomRecipe(tempPrefersQuickRecipes, tempPrefersIntGluten, tempPrefersIntLactose);
     } catch (error) {
