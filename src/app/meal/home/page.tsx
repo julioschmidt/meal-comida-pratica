@@ -221,7 +221,11 @@ export default function Home() {
               alt={"Botão de amei"}
               width={56}
               height={56}
-              onClick={(e) => {handleSaveRecipe(recipes[0])}}
+              onClick={(e) => {
+                localStorage.setItem('likedRecipe', JSON.stringify(recipes[0]));
+                handleSaveRecipe(recipes[0])
+              }
+            }
               className="transition-transform transform hover:scale-110 all ease-in-out duration-500"
             />
             <Image
@@ -230,7 +234,9 @@ export default function Home() {
               width={56}
               height={56}
               className="transition-transform transform hover:scale-110 all ease-in-out duration-500 "
-              onClick={() => { window.location.href = 'http://localhost:3000/meal/receita'}}
+              onClick={() => { 
+                localStorage.setItem('likedRecipe', JSON.stringify(recipes[0]));
+                window.location.href = 'http://localhost:3000/meal/receita'}}
             />
           </div>
         ) : ''}
@@ -279,7 +285,11 @@ export default function Home() {
                   alt={"Botão de amei"}
                   width={40}
                   height={40}
-                  onClick={(e) => {handleSaveRecipe(recipe)}}
+                  
+                  onClick={(e) => {
+                    localStorage.setItem('likedRecipe', JSON.stringify(recipe));
+                    handleSaveRecipe(recipe)}
+                  }
                   className="transition-transform transform hover:scale-110 all ease-in-out duration-500" />
                 <Image
                   src={"/icons/check-icon.svg"}
