@@ -22,7 +22,7 @@ export default function HeaderNavigation({ open }: HeaderNavigationProps) {
         </li>
         <li>
           <a
-            href="#"
+            href="/meal/comunidade"
             className="mr-6 text-right text-white lg:px-5 py-2 block hover:text-slate-200"
           >
             Comunidade
