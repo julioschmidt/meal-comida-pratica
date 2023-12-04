@@ -12,8 +12,21 @@ export default function Home() {
   const mobileClasses = "md:flex-col items-center md:w-full";
   const desktopClasses = "md:flex-row items-center w-full";
 
+  interface Recipe {
+    id: number;
+  }
+
 // fazer um array de receitas
   const [recipes, setRecipes] = useState<any[]>([]);
+  
+  const [prefersQuickRecipes, setPreferesQuickRecipes] = useState<boolean>(false);
+  const [prefersIntGluten, setPrefersIntGluten] = useState<boolean>(false);
+  const [prefersIntLactose, setPrefersIntLactose] = useState<boolean>(false);
+  // const [preferences, setPreferences] = useState({
+  //   prefersQuickRecipes: false,
+  //   preferesIntLactose: false,
+  //   prefersIntGluten: false,
+  // });
 
   async function fetchRandomRecipe() {
     try {
@@ -23,14 +36,14 @@ export default function Home() {
       );  
       const data = await response.json();
       const category = data.category;
-      console.log(category);
+      console.log(data);
       newRecipes.push(data);
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 3; i++) {
         const response = await fetch(
-          `http://localhost:3000/api/recipe/random/category?altura=840&largura=480&category=${category}`
-        );  
-        const data = await response.json();
-        newRecipes.push(data);
+              `http://localhost:3000/api/recipe/random/category?altura=840&largura=480&category=${category}&quick=${prefersQuickRecipes}&gluten=${prefersIntGluten}&lactose=${prefersIntLactose}`
+          );  
+          const data = await response.json();
+          newRecipes.push(data);
       }
         setRecipes(newRecipes);
         localStorage.setItem("randomRecipes", JSON.stringify(newRecipes));
@@ -39,28 +52,63 @@ export default function Home() {
     }
   }
 
+  async function fetchUserPreferences() {
+    try {
+      const response = await fetch("http://localhost:3000/api/user");
+      const data = await response.json();
+      if (data.user_preferences && data.user_preferences.length > 0) {
+        const userPreferences = data.user_preferences[0];
+    
+        if (userPreferences.quick_recipes !== null) {
+            setPreferesQuickRecipes(userPreferences.quick_recipes);
+        } else {
+            setPreferesQuickRecipes(false);
+        }
+    
+        if (userPreferences.lactose_intolerance !== null) {
+            setPrefersIntLactose(userPreferences.lactose_intolerance);
+        } else {
+            setPrefersIntLactose(false);
+        }
+    
+        if (userPreferences.gluten_intolerance !== null) {
+            setPrefersIntGluten(userPreferences.gluten_intolerance);
+        } else {
+            setPrefersIntGluten(false);
+        }
+    } else {
+        // Handle the case where user_preferences is undefined or empty
+        setPreferesQuickRecipes(false);
+        setPrefersIntLactose(false);
+        setPrefersIntGluten(false);
+    }
+    } catch (error) {
+      console.error("Erro ao buscar as preferências do usuário:", error);
+    }
+  }
+  
   useEffect(() => {
     const storedRandomRecipe = localStorage.getItem("randomRecipes");
-    if (storedRandomRecipe) {
-      setRecipes(JSON.parse(storedRandomRecipe));
-    } else {
-      fetchRandomRecipe();
+    if (prefersQuickRecipes !== null) {
+      if (storedRandomRecipe) {
+        setRecipes(JSON.parse(storedRandomRecipe));
+      } else {
+        fetchRandomRecipe();
+      }
     }
-    // async function fetchRecipes() {
-    //   try {
-    //     if (localStorage.getItem("recipes"))
-    //   }
-    // }
-    // fetchRecipes();
+    fetchUserPreferences();
   }, []);
-
+  if (typeof window !== 'undefined') {
+    localStorage.setItem("preferences", JSON.stringify([prefersQuickRecipes, prefersIntLactose, prefersIntGluten]));
+  }
+  
   const { data: session } = useSession()
 
   if (!session) {
     redirect('/login')
   }
 
-  const handleSaveRecipe = async () => {
+  const handleSaveRecipe = async (recipe: Recipe) => {
     try {
       const response = await fetch("http://localhost:3000/api/recipe/save", {
         method: "POST",
@@ -68,7 +116,7 @@ export default function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          recipeId: recipes[0].id,
+          recipeId: recipe.id,
           userEmail: session?.user?.email,
           savedAt: new Date().toISOString().split('T')[0],
         }),
@@ -173,7 +221,7 @@ export default function Home() {
               alt={"Botão de amei"}
               width={56}
               height={56}
-              onClick={handleSaveRecipe}
+              onClick={(e) => {handleSaveRecipe(recipes[0])}}
               className="transition-transform transform hover:scale-110 all ease-in-out duration-500"
             />
             <Image
@@ -188,6 +236,8 @@ export default function Home() {
         ) : ''}
       </div>
 
+
+          
       <div className={` w-full px-6 ${desktopClasses} mt-3 `} style={{textAlign: 'center'}}>
         {recipes[0] ? (
           <div className="flex justify-around pt-3">
@@ -195,45 +245,58 @@ export default function Home() {
           </div>
         ) : 'Nada ainda'}
       </div>
-        <div >
-        <SimpleGrid columns={3} minWidth={250} spacing={10} p={5}>
-          {recipes.slice(1).map((recipe, index) => (
-            <Box mb={10} key={index} bg='tomato' height={250}>
-              <Text textAlign="center" fontSize="xl">
-                {recipe ? recipe.name : "Carregando"}
-              </Text>
-              <Image
-                src={recipe.image?.imagem_url || ""}
-                alt={recipe.name || "imagem de comida"}
-                width={200}
-                height={200}
-                className="w-full h-full rounded transition-transform transform hover:scale-[1.02] all ease-in-out duration-500"
-              />
-              <div id="recipe-info" className="flex flex-col justify-center align-center gap-3 mt-3">
-                <div id="category" className="flex items-center gap-2">
-                  {recipe.category === 'bebidas' && <BeerBottle size={32} color="#22c55e" />}
-                  {recipe.category === 'molhos' && <CookingPot size={32} color="#22c55e" />}
-                  {recipe.category === 'carnes' && <Knife size={32} color="#22c55e" />}
-                  {recipe.category === 'paes' && <Hamburger size={32} color="#22c55e" />}
-                  {recipe.category === 'saladas' && <Flower size={32} color="#22c55e" />}
-                  {recipe.category === 'legumes' && <Flower size={32} color="#22c55e" />}
-                  {recipe.category === 'bolos' && <Cookie size={32} color="#22c55e" />}
-                  {recipe.category === 'peixes-e-frutos-do-mar' && <Fish size={32} color="#22c55e" />}
-                  {recipe.category === 'lanches' && <Hamburger size={32} color="#22c55e" />}
-                  {recipe.category === 'sopas' && <CookingPot size={32} color="#22c55e" />}
-                  {recipe.category === 'risotos' && <CookingPot size={32} color="#22c55e" />}
-                  {recipe.category === 'aperitivos-e-antepastos' && <CookingPot size={32} color="#22c55e" />}
-                  {recipe.category === 'massas' && <CookingPot size={32} color="#22c55e" />}
-                  {recipe.category === 'acompanhamentos' && <CookingPot size={32} color="#22c55e" />}
-                  {recipe.category === 'aves' && <Bird size={32} color="#22c55e" />}
-                  {recipe.category === 'doces' && <Cookie size={32} color="#22c55e" />}
-                  <p className="text-black">{recipe.category}</p>
+
+      <div className={`mt-1 flex justify-center items-center w-full px-6 ${desktopClasses}`}>
+        <SimpleGrid minChildWidth="25vh" spacing={10}>
+          {recipes.slice(1).map((recipe) => (
+
+            <><div className={`${recipes ? 'border-2 border-slate-500 bg-slate-50' : ''}  mr-2 ml-2 p-2 rounded `}>
+              <Box mb={10} key={recipe.id} height={250}>
+                <Text textAlign="center">
+                  {recipe ? recipe.name : "Carregando"}
+                </Text>
+                <Image
+                  src={recipe.image?.imagem_url || ""}
+                  alt={recipe.name || "imagem de comida"}
+                  width={200}
+                  height={200}
+                  className="w-full h-full rounded transition-transform transform hover:scale-[1.02] all ease-in-out duration-500" />
+                <div className="flex align-center gap-5">
+                  <div id="cooking-time" className="flex items-center gap-2">
+                    <Timer size={32} color="#22c55e" />
+                    <p className="text-black">{recipe.cooking_time}</p>
+                  </div>
+                  <div id="portions" className="flex items-center gap-2">
+                    <User size={28} color="#22c55e" />
+                    <p className="text-black">{recipe.portions} porções</p>
                   </div>
                 </div>
-            </Box>
+              </Box>
+            </div>
+            <div className="flex justify-around gap-5">
+                <Image
+                  src={"/icons/heart-icon.svg"}
+                  alt={"Botão de amei"}
+                  width={40}
+                  height={40}
+                  onClick={(e) => {handleSaveRecipe(recipe)}}
+                  className="transition-transform transform hover:scale-110 all ease-in-out duration-500" />
+                <Image
+                  src={"/icons/check-icon.svg"}
+                  alt={"Botão de gostei"}
+                  width={40}
+                  height={40}
+                  className="transition-transform transform hover:scale-110 all ease-in-out duration-500 "
+                  onClick={() => { 
+                    localStorage.setItem('likedRecipe', JSON.stringify(recipe));
+                    window.location.href = 'http://localhost:3000/meal/receita'; } } />
+              </div>
+              </>
           ))}
         </SimpleGrid>
-       </div>
+
+      </div>
+
 
 
 

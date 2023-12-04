@@ -5,7 +5,6 @@ import { updateUser } from "../../../models/User";
 export async function POST(request: Request) {
   const prisma = new PrismaClient();
   const body = await request.json();
-  console.log(body);
   const user = await updateUser({
     email: body.email,
     name: body.name,

@@ -27,7 +27,7 @@ export default function Receita() {
         }
     }
     useEffect(() => {
-        const storedRandomRecipe = localStorage.getItem("randomRecipe");
+        const storedRandomRecipe = localStorage.getItem("likedRecipe");
         if (storedRandomRecipe) {
             setRecipe(JSON.parse(storedRandomRecipe));
         } else {

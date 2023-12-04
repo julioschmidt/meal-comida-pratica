@@ -1,9 +1,10 @@
 'use client'
 import Header from "@/app/components/Header";
-import { Avatar, FormControl, FormLabel, Input, Stack, Wrap, WrapItem, useCheckboxGroup, Text, Checkbox } from "@chakra-ui/react";
+import { Avatar, Editable, FormControl, FormLabel, Input, Stack, Wrap, WrapItem, useCheckboxGroup, Text, Checkbox, Select, SimpleGrid } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import Button from "../../components/Button";
+// import fetchIngredients from "../armazem/page";
 
 
 export default function Configuracao() {
@@ -12,6 +13,8 @@ export default function Configuracao() {
     const [prefersQuickRecipes, setPreferesQuickRecipes] = useState<boolean>(false);
     const [prefersIntGluten, setPrefersIntGluten] = useState<boolean>(false);
     const [prefersIntLactose, setPrefersIntLactose] = useState<boolean>(false);
+    const [ingredients, setIngredients] = useState<any[]>([]);
+    const [selectedIngredient, setSelectedIngredient] = useState<any | null>(null);
 
     const [isEditing, setIsEditing] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
@@ -59,7 +62,8 @@ export default function Configuracao() {
         } else {
             toggleEditing();
         }
-}
+    }
+
 
     async function fetchUser() {
         try {
@@ -127,21 +131,21 @@ export default function Configuracao() {
 
             <div className="mt-10">
                 <form onSubmit={handleSubmit}>
-                    <FormControl isDisabled={!isEditing} as='fieldset' width="50%"  mx="auto" my={0}>
+                    <FormControl isDisabled={!isEditing} as='fieldset' width="65%"  mx="auto" my={0}>
                         <FormLabel as='legend'>Nome</FormLabel>
                         <Input 
                         value={name}
                         focusBorderColor="green.300" type="text" name="name" onChange={(e) => setName(e.target.value)} />
                     </FormControl>
                     <div className="pt-4">
-                        <FormControl isDisabled={!isEditing} as='fieldset' width="50%" mx="auto" my={0}>
+                        <FormControl isDisabled={!isEditing} as='fieldset' width="65%" mx="auto" my={0}>
                             <FormLabel as='legend' >username</FormLabel>
                             <Input value={username} focusBorderColor="green.300" type="text" name="username" onChange={(e) => setUsername(e.target.value)} />
                         </FormControl>
                     </div>
-                    <FormControl isDisabled={!isEditing} as='fieldset' width="50%" mx="auto" my={0}>
-                        <FormLabel as='legend'>Preferências</FormLabel>
-                        <Stack spacing={5} direction='row'>
+                    <FormControl isDisabled={!isEditing} as='fieldset'>
+                        <FormLabel pt={5} pb={3} mx="auto" my={0} as='legend'>Preferências</FormLabel>
+                        <Stack spacing={5} direction='row' justifyContent="center">
                             <Checkbox 
                                 isChecked={prefersQuickRecipes}
                                 onChange={(e) => setPreferesQuickRecipes(e.target.checked)}
@@ -162,6 +166,7 @@ export default function Configuracao() {
                             </Checkbox>
                         </Stack>
                     </FormControl>
+
                     <div className="flex justify-center items-center mt-10">
                         <Button
                             type={"submit"}

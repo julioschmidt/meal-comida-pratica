@@ -49,15 +49,6 @@ export async function createUser({
       },
     });
 
-    const userPreferences = await prisma.user_preferences.create({
-      data: {
-        user_id: id,
-        quick_recipes: false,
-        lactose_intolerance: false,
-        gluten_intolerance: false,
-      },
-    });
-
     return true;
   } catch (error) {
     console.error("Error creating user ", error);

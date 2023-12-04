@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "prisma": {
-    "seed": "ts-node-esm prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.1",
