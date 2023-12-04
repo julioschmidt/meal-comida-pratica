@@ -28,7 +28,7 @@ export default function Home() {
   //   prefersIntGluten: false,
   // });
 
-  async function fetchRandomRecipe() {
+  async function fetchRandomRecipe(prefersQuickRecipes: boolean, prefersIntGluten: boolean, prefersIntLactose: boolean) {
     try {
       let newRecipes = [];
       const response = await fetch(
@@ -37,8 +37,7 @@ export default function Home() {
       const data = await response.json();
       const category = data.category;
       console.log(data);
-      newRecipes.push(data);
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 4; i++) {
         const response = await fetch(
               `http://localhost:3000/api/recipe/random/category?altura=840&largura=480&category=${category}&quick=${prefersQuickRecipes}&gluten=${prefersIntGluten}&lactose=${prefersIntLactose}`
           );  
@@ -56,51 +55,52 @@ export default function Home() {
     try {
       const response = await fetch("http://localhost:3000/api/user");
       const data = await response.json();
+      let tempPrefersQuickRecipes = false;
+      let tempPrefersIntLactose = false;
+      let tempPrefersIntGluten = false;
+
       if (data.user_preferences && data.user_preferences.length > 0) {
         const userPreferences = data.user_preferences[0];
     
         if (userPreferences.quick_recipes !== null) {
-            setPreferesQuickRecipes(userPreferences.quick_recipes);
-        } else {
-            setPreferesQuickRecipes(false);
+            tempPrefersQuickRecipes = userPreferences.quick_recipes;
         }
-    
+
         if (userPreferences.lactose_intolerance !== null) {
-            setPrefersIntLactose(userPreferences.lactose_intolerance);
-        } else {
-            setPrefersIntLactose(false);
+            tempPrefersIntLactose = userPreferences.lactose_intolerance;
         }
-    
+
         if (userPreferences.gluten_intolerance !== null) {
-            setPrefersIntGluten(userPreferences.gluten_intolerance);
-        } else {
-            setPrefersIntGluten(false);
+            tempPrefersIntGluten = userPreferences.gluten_intolerance;
         }
-    } else {
-        // Handle the case where user_preferences is undefined or empty
-        setPreferesQuickRecipes(false);
-        setPrefersIntLactose(false);
-        setPrefersIntGluten(false);
-    }
+      }
+
+      setPreferesQuickRecipes(tempPrefersQuickRecipes);
+      setPrefersIntLactose(tempPrefersIntLactose);
+      setPrefersIntGluten(tempPrefersIntGluten);
+      console.log(tempPrefersIntLactose);
+
+      fetchRandomRecipe(tempPrefersQuickRecipes, tempPrefersIntGluten, tempPrefersIntLactose);
     } catch (error) {
       console.error("Erro ao buscar as preferências do usuário:", error);
     }
-  }
+}
+
+  
+  // useEffect(() => {
+  //   fetchUserPreferences();
+
+  // }, []);
   
   useEffect(() => {
     const storedRandomRecipe = localStorage.getItem("randomRecipes");
-    if (prefersQuickRecipes !== null) {
-      if (storedRandomRecipe) {
+    if (storedRandomRecipe) {
         setRecipes(JSON.parse(storedRandomRecipe));
-      } else {
-        fetchRandomRecipe();
-      }
+    } else {
+      fetchUserPreferences();
     }
-    fetchUserPreferences();
-  }, []);
-  if (typeof window !== 'undefined') {
-    localStorage.setItem("preferences", JSON.stringify([prefersQuickRecipes, prefersIntLactose, prefersIntGluten]));
-  }
+}, []);
+
   
   const { data: session } = useSession()
 
@@ -213,7 +213,7 @@ export default function Home() {
               alt={"Botão de não gostei"}
               width={56}
               height={56}
-              onClick={fetchRandomRecipe}
+              onClick={() => fetchUserPreferences()}
               className="transition-transform transform hover:scale-110 all ease-in-out duration-500"
             />
             <Image

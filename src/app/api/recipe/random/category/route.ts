@@ -5,64 +5,64 @@ import { redirect } from 'next/navigation'
 
 async function generateRandomRecipeId(category: string, quick: boolean, lactose: boolean, gluten: boolean): Promise<number> {
     const prisma = new PrismaClient()
+
+    let whereClause: {
+        category?: {
+            contains: string;
+        };
+        cooking_time?: {
+            endsWith: string;
+        };
+    } = {
+        category: {
+            contains: category,
+        }
+    };
+
     if (quick) {
-        const recipeIds = await prisma.recipe.findMany({
-            where: {
-                category: {
-                    contains: category,
-                },
-                cooking_time: {
-                    endsWith: 'min',
-                }
-            },
-            select:
-            {
-                id: true
-            }
-        });
-        const listOfid = recipeIds.map((recipe) => recipe.id)
-        const randomIndex = Math.floor(Math.random() * listOfid.length)
-        return listOfid[randomIndex];
-    }
-    // if (lactose) {
-    //     const recipeIds = await prisma.recipe_ingredients.findMany({
-    //         where: {
-    //             NOT: {
-    //             ingredients_id: {
-    //                 name: {
-    //                     contains: 'leite'
-    //                 }
-    //             }
-    //             }
-    //         },
-    //         select:
-    //         {
-    //             recipe_id: true
-    //         },            
-    //     });
-    //     const listOfid = recipeIds.map((recipe) => recipe.recipe_id)
-    //     const randomIndex = Math.floor(Math.random() * listOfid.length)
-    //     return listOfid[randomIndex];
-    // }
-    else {
-        const recipeIds = await prisma.recipe.findMany({
-            where: {
-                category: {
-                    contains: category,
-                }
-            },
-            select:
-            {
-                id: true
-            }
-        });
-        const listOfid = recipeIds.map((recipe) => recipe.id)
-        const randomIndex = Math.floor(Math.random() * listOfid.length)
-        return listOfid[randomIndex];
+        whereClause['cooking_time'] = {
+            endsWith: 'min',
+        };
     }
 
-    
+    const allRecipes = await prisma.recipe.findMany({
+        where: whereClause,
+        select: {
+            id: true,
+            ingredients_description: true
+        },
+    });
+
+    let filteredRecipes = allRecipes;
+    console.log(quick);
+    console.log(lactose);
+    if (lactose) {
+        filteredRecipes = filteredRecipes.filter(recipe => {
+            for (let ingredient of recipe.ingredients_description) {
+                if (ingredient.toLowerCase().includes('leite') || ingredient.toLowerCase().includes('queijo') || ingredient.toLowerCase().includes('chocolate')) {
+                    return false;
+                }
+            }
+            return true;
+        });
     }
+
+    if (gluten) {
+        filteredRecipes = filteredRecipes.filter(recipe => {
+            for (let ingredient of recipe.ingredients_description) {
+                if (ingredient.toLowerCase().includes('trigo')) {
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+
+    const listOfid = filteredRecipes.map((recipe) => recipe.id)
+    const randomIndex = Math.floor(Math.random() * listOfid.length)
+    return listOfid[randomIndex];
+}
+
 
 export async function GET(request: Request) {
 
